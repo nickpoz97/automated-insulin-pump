@@ -6,7 +6,7 @@ import java.time.Instant;
 
 public class BloodData {
     // boundaries
-    private static int maxSugar = 100;
+    private static int maxSugar = 150;
     private static int minSugar = 50;
 
     private int sugarLevel;

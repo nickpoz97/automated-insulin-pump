@@ -15,4 +15,8 @@ public class Pump {
         insulineReservoir.take(quantity);
         bloodData.injectInsulin(quantity);
     }
+
+    public int getAvailableInsulin(){
+        return insulineReservoir.getAmount();
+    }
 }
