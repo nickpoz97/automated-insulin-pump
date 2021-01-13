@@ -1,3 +1,3 @@
-package it.univr.systemComponents;
+package it.univr.states;
 
 public enum SugarStates {LOWSUGAR, HIGHSUGAR, GOOD}

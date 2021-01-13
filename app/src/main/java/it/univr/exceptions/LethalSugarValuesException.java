@@ -1,7 +1,9 @@
 package it.univr.exceptions;
 
-public class WrongSugarValueException extends Exception{
-    public WrongSugarValueException(int min, int max){
-        super("Initialized sugar with values out of boundaries (min: " + min + " , " + "max: " + max + ")");
+public class LethalSugarValuesException extends RuntimeException{
+    public LethalSugarValuesException(int min, int max, int actual){
+        super("Sugar exceeding lethal levels (min: " + min + " , " +
+                "max: " + max + "," +
+                "actual: " + actual + ")");
     }
 }

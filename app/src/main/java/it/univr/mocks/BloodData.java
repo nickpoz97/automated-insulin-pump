@@ -1,6 +1,6 @@
 package it.univr.mocks;
 
-import it.univr.exceptions.WrongSugarValueException;
+import it.univr.exceptions.LethalSugarValuesException;
 
 public abstract class BloodData {
     // boundaries
@@ -15,12 +15,16 @@ public abstract class BloodData {
     // instance detail flag
     private boolean isInterative;
 
-    public BloodData(int sugarLevel, int incrementValue, int incrementRate) throws WrongSugarValueException {
-        this.setSugarLevel(sugarLevel);
-        this.setIncrementValue(incrementValue);
-        this.setIncrementRate(incrementRate);
-        if(sugarLevel < getMinSugar() && sugarLevel > getMaxSugar()){
-            throw new WrongSugarValueException(getMinSugar(), getMaxSugar());
+    public BloodData(int sugarLevel, int incrementValue, int incrementRate) throws LethalSugarValuesException {
+        this.sugarLevel = sugarLevel;
+        this.incrementValue = incrementValue;
+        this.incrementRate = incrementRate;
+        this.checkSugarValuesConsistency();
+    }
+
+    private void checkSugarValuesConsistency() throws LethalSugarValuesException {
+        if(this.sugarLevel < getMinSugar() && this.sugarLevel > getMaxSugar()){
+            throw new LethalSugarValuesException(minSugar, maxSugar,this.sugarLevel);
         }
     }
 
@@ -32,9 +36,10 @@ public abstract class BloodData {
         return minSugar;
     }
 
-    protected void updateSugarLevel(){ // time independent and call number dependent
-        setSugarLevel(getSugarLevel() + getIncrementValue());
-        setIncrementValue(getIncrementValue() + getIncrementRate());
+    protected void updateSugarLevel() throws LethalSugarValuesException { // time independent and call number dependent
+        this.sugarLevel += this.incrementValue;
+        this.incrementValue += incrementRate;
+        this.checkSugarValuesConsistency();
     }
 
     public int getSugarLevel(){
@@ -42,31 +47,21 @@ public abstract class BloodData {
     }
 
     // injected insulin decreases increment rate
-    public abstract void injectInsulin(int amount);
+    public void injectInsulin(int amount){ this.incrementRate -= amount; }
+
+    public void addSugar(int amount) throws LethalSugarValuesException{
+        this.sugarLevel += amount;
+        this.checkSugarValuesConsistency();
+    }
+
+    protected void setInteractive(boolean interactive) {
+        isInterative = interactive;
+    }
+
     // different implementations
-    public abstract int actualSugarLevel();
+    public abstract int actualSugarLevel() throws LethalSugarValuesException;
 
-    protected void setSugarLevel(int sugarLevel) {
-        this.sugarLevel = sugarLevel;
-    }
-
-    protected int getIncrementValue() {
-        return incrementValue;
-    }
-
-    protected void setIncrementValue(int incrementValue) {
-        this.incrementValue = incrementValue;
-    }
-
-    protected int getIncrementRate() {
-        return incrementRate;
-    }
-
-    protected void setIncrementRate(int incrementRate) {
-        this.incrementRate = incrementRate;
-    }
-
-    protected void setInterative(boolean interative) {
-        isInterative = interative;
+    public boolean isInterative() {
+        return isInterative;
     }
 }

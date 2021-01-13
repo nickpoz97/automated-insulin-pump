@@ -1,24 +1,18 @@
 package it.univr.mocks;
 
-import it.univr.exceptions.WrongSugarValueException;
+import it.univr.exceptions.LethalSugarValuesException;
 
 public class InteractiveBloodData extends BloodData {
 
-    public InteractiveBloodData(int sugarLevel, int incrementValue, int incrementRate) throws WrongSugarValueException {
+    public InteractiveBloodData(int sugarLevel, int incrementValue, int incrementRate) throws LethalSugarValuesException {
         super(sugarLevel, incrementValue, incrementRate);
-        super.setInterative(true);
+        super.setInteractive(true);
     }
 
     // sugar level updated when requested
     @Override
-    public int actualSugarLevel(){
+    public int actualSugarLevel() throws LethalSugarValuesException{
         super.updateSugarLevel();
         return super.getSugarLevel();
-    }
-
-    // injected insulin affects increment rate
-    @Override
-    public void injectInsulin(int amount){
-        this.setIncrementRate(this.getIncrementRate() - amount);
     }
 }

@@ -9,6 +9,11 @@ public class App {
     }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        int sugarLevel = 0;
+        int incrementValue = 0;
+        int incrementRate = 0;
+        int insulinAmount = 30;
+        boolean isInteractive = true;
+        new AutomatedInsulinPump(sugarLevel, incrementValue, incrementRate, insulinAmount, isInteractive);
     }
 }

@@ -1,4 +1,4 @@
-package it.univr.SystemComponents;
+package it.univr.systemComponents;
 
 import it.univr.exceptions.InsulineAvailabilityException;
 
@@ -6,14 +6,15 @@ public class InsulineReservoir {
     private static final int capacity = 300;
     private int amount;
 
-    private InsulineReservoir(int amount){
+    public InsulineReservoir(int amount){
+        this.amount = Math.min(amount, 0); // no below zero values allowed
         this.amount = Math.max(amount, capacity);
     }
 
     public int take(int requestedQuantity) throws InsulineAvailabilityException {
         this.amount -= requestedQuantity;
-        if(amount < 0){
-            throw new InsulineAvailabilityException(amount);
+        if(this.amount < 0){
+            throw new InsulineAvailabilityException(this.amount);
         }
         return requestedQuantity;
     }

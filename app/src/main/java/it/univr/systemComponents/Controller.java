@@ -1,6 +1,8 @@
-package it.univr.SystemComponents;
+package it.univr.systemComponents;
 
 import it.univr.exceptions.InsulineAvailabilityException;
+import it.univr.states.InsulinStates;
+import it.univr.states.SugarStates;
 
 public class Controller {
     private static final int lowerSugarBound = 80;
@@ -10,7 +12,6 @@ public class Controller {
     private final Pump pump;
     private final Display display;
     private final SugarSensor sugarSensor;
-    //private final boolean interactiveMode;
 
     private SugarStates sugarState = SugarStates.GOOD;
     private InsulinStates insulinState = InsulinStates.GOOD;
@@ -86,7 +87,7 @@ public class Controller {
             }
         }
         catch (InsulineAvailabilityException e){
-            display.printError("#Not Enough insulin, fill the reservoir#");
+            display.printError("# Not Enough insulin, fill the reservoir #");
         }
     }
 
