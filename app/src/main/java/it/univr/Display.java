@@ -46,4 +46,16 @@ public class Display {
         // TODO complete the method
         return null;
     }
+
+    public void printError(String message){
+        System.out.println("\n+message+\n");
+    }
+
+    public void inputHandler() {
+        System.out.println("Choose an action:");
+        System.out.println("c) continue execution (1 minute time simulation)");
+        System.out.println("i) fill insulin reservoir");
+        System.out.println("s) add sugar");
+        // TODO complete method
+    }
 }

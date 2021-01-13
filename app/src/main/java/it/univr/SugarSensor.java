@@ -1,5 +1,7 @@
 package it.univr;
 
+import it.univr.mocks.BloodData;
+
 public class SugarSensor {
     private BloodData bloodData;
 
