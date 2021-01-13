@@ -1,6 +1,7 @@
-package it.univr;
+package it.univr.SystemComponents;
 
 import java.util.Calendar;
+import java.util.Scanner;
 
 public class Display {
     private static int lastDisplayId = 0;
@@ -56,6 +57,24 @@ public class Display {
         System.out.println("c) continue execution (1 minute time simulation)");
         System.out.println("i) fill insulin reservoir");
         System.out.println("s) add sugar");
-        // TODO complete method
+        System.out.print("Your choice: ");
+        try(Scanner keyboard = new Scanner(System.in)){
+            String choice = keyboard.next();
+            if(choice.equals("c")){
+                return;
+            }
+            else if(choice.equals("i")){
+                processReservoirFilling();
+            }
+            else if(choice.equals("s")){
+                processSugarAddition();
+            }
+        }
+    }
+
+    private void processReservoirFilling() {
+    }
+
+    private void processSugarAddition() {
     }
 }
