@@ -1,20 +1,20 @@
 package it.univr.systemComponents;
 
+import it.univr.bloodModels.BloodModel;
 import it.univr.exceptions.InsulineAvailabilityException;
-import it.univr.mocks.BloodData;
 
 public class Pump {
     private InsulineReservoir insulineReservoir;
-    private BloodData bloodData;
+    private BloodModel bloodModel;
 
-    public Pump(InsulineReservoir insulineReservoir, BloodData bloodData){
+    public Pump(InsulineReservoir insulineReservoir, BloodModel bloodModel){
         this.insulineReservoir = insulineReservoir;
-        this.bloodData = bloodData;
+        this.bloodModel = bloodModel;
     }
 
     public void injectInsulin(int quantity) throws InsulineAvailabilityException{
         insulineReservoir.take(quantity);
-        bloodData.injectInsulin(quantity);
+        bloodModel.injectInsulin(quantity);
     }
 
     public int getAvailableInsulin(){

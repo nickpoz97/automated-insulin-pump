@@ -1,8 +1,8 @@
-package it.univr.mocks;
+package it.univr.bloodModels;
 
 import it.univr.exceptions.LethalSugarValuesException;
 
-public abstract class BloodData {
+public abstract class BloodModel {
     // boundaries
     private static final int maxSugar = 150;
     private static final int minSugar = 50;
@@ -15,7 +15,7 @@ public abstract class BloodData {
     // instance detail flag
     private boolean isInterative;
 
-    public BloodData(int sugarLevel, int incrementValue, int incrementRate) throws LethalSugarValuesException {
+    public BloodModel(int sugarLevel, int incrementValue, int incrementRate) throws LethalSugarValuesException {
         this.sugarLevel = sugarLevel;
         this.incrementValue = incrementValue;
         this.incrementRate = incrementRate;
@@ -23,17 +23,9 @@ public abstract class BloodData {
     }
 
     private void checkSugarValuesConsistency() throws LethalSugarValuesException {
-        if(this.sugarLevel < getMinSugar() && this.sugarLevel > getMaxSugar()){
+        if(this.sugarLevel < minSugar || this.sugarLevel > maxSugar){
             throw new LethalSugarValuesException(minSugar, maxSugar,this.sugarLevel);
         }
-    }
-
-    protected static int getMaxSugar() {
-        return maxSugar;
-    }
-
-    protected static int getMinSugar() {
-        return minSugar;
     }
 
     protected void updateSugarLevel() throws LethalSugarValuesException { // time independent and call number dependent
@@ -42,7 +34,7 @@ public abstract class BloodData {
         this.checkSugarValuesConsistency();
     }
 
-    public int getSugarLevel(){
+    protected int getSugarLevel(){
         return this.sugarLevel;
     }
 
@@ -63,5 +55,22 @@ public abstract class BloodData {
 
     public boolean isInterative() {
         return isInterative;
+    }
+
+    // only for testing purpose
+    public static int getMaxSugar() {
+        return maxSugar;
+    }
+
+    public static int getMinSugar() {
+        return minSugar;
+    }
+
+    public int getIncrementValue() {
+        return incrementValue;
+    }
+
+    public int getIncrementRate() {
+        return incrementRate;
     }
 }

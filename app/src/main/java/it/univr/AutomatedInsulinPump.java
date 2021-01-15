@@ -1,22 +1,22 @@
 package it.univr;
 
-import it.univr.mocks.BloodData;
-import it.univr.mocks.InteractiveBloodData;
+import it.univr.bloodModels.BloodModel;
+import it.univr.bloodModels.InteractiveBloodModel;
 import it.univr.systemComponents.*;
 
 public class AutomatedInsulinPump {
     private Controller controller;
 
     public AutomatedInsulinPump(int sugarLevel, int incrementValue, int incrementRate, int insulinAmount, boolean testingMode){
-        BloodData bloodData = null;
+        BloodModel bloodModel = null;
         if(testingMode){
-            bloodData = new InteractiveBloodData(sugarLevel, incrementValue, incrementRate);
+            bloodModel = new InteractiveBloodModel(sugarLevel, incrementValue, incrementRate);
         }
         InsulineReservoir insulineReservoir = new InsulineReservoir(insulinAmount);
-        SugarSensor sugarSensor = new SugarSensor(bloodData);
-        Pump pump = new Pump(insulineReservoir, bloodData);
-        Display display = new Display(bloodData, insulineReservoir);
-        Controller controller = new Controller(pump, display, sugarSensor, bloodData.isInterative());
+        SugarSensor sugarSensor = new SugarSensor(bloodModel);
+        Pump pump = new Pump(insulineReservoir, bloodModel);
+        Display display = new Display(bloodModel, insulineReservoir);
+        Controller controller = new Controller(pump, display, sugarSensor, bloodModel.isInterative());
     }
 
     public void run(){

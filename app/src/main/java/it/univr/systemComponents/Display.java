@@ -1,6 +1,6 @@
 package it.univr.systemComponents;
 
-import it.univr.mocks.BloodData;
+import it.univr.bloodModels.BloodModel;
 import it.univr.states.InsulinStates;
 import it.univr.states.SugarStates;
 
@@ -11,13 +11,13 @@ public class Display {
     private static int lastDisplayId = 0;
     private int displayId;
     // only used in interactive mode
-    private BloodData bloodData;
+    private BloodModel bloodModel;
     private InsulineReservoir insulineReservoir;
 
-    public Display(BloodData bloodData, InsulineReservoir insulineReservoir){
+    public Display(BloodModel bloodModel, InsulineReservoir insulineReservoir){
         lastDisplayId++;
         this.displayId = lastDisplayId;
-        this.bloodData = bloodData;
+        this.bloodModel = bloodModel;
         this.insulineReservoir = insulineReservoir;
     }
 
@@ -101,6 +101,6 @@ public class Display {
     private void processSugarAddition(Scanner keyboard) {
         System.out.print("Insert sugar amount (negative values are equal to 0): ");
         int value = Math.max(keyboard.nextByte(), 0);
-        this.bloodData.addSugar(value);
+        this.bloodModel.addSugar(value);
     }
 }

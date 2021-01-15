@@ -1,15 +1,15 @@
 package it.univr.systemComponents;
 
-import it.univr.mocks.BloodData;
+import it.univr.bloodModels.BloodModel;
 
 public class SugarSensor {
-    private BloodData bloodData;
+    private BloodModel bloodModel;
 
-    public SugarSensor(BloodData bloodData){
-        this.bloodData = bloodData;
+    public SugarSensor(BloodModel bloodModel){
+        this.bloodModel = bloodModel;
     }
 
     public int getSugarInBlood(){
-        return bloodData.getSugarLevel();
+        return bloodModel.actualSugarLevel();
     }
 }
