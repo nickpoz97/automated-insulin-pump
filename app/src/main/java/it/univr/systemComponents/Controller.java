@@ -4,13 +4,16 @@ import it.univr.exceptions.InsulineAvailabilityException;
 import it.univr.states.InsulinStates;
 import it.univr.states.SugarStates;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Controller {
     private static final int lowerSugarBound = 80;
     private static final int upperSugarBound = 100;
     private static final int lowerInsulinBound = 10;
 
     private final Pump pump;
-    private final Display display;
+    private final List<Display> displays = new ArrayList<>(2);
     private final SugarSensor sugarSensor;
 
     private SugarStates sugarState = SugarStates.GOOD;
@@ -19,14 +22,14 @@ public class Controller {
     private int remainingInsulin;
     private int[] sugarMeasurements = new int[3];
 
-    // testing flag
-    private final boolean isInteractive;
-
-    public Controller(Pump pump, Display display, SugarSensor sugarSensor, boolean isInteractive) {
+    public Controller(Pump pump, Display display, SugarSensor sugarSensor) {
         this.pump = pump;
-        this.display = display;
+        displays.add(display);
         this.sugarSensor = sugarSensor;
-        this.isInteractive = isInteractive;
+    }
+
+    public void addDisplay(){
+        displays.add(new Display());
     }
 
     // loop for Controller
@@ -38,10 +41,11 @@ public class Controller {
 
         while(true){
             check();
-            display.printData(sugarMeasurements[0], remainingInsulin, sugarState, insulinState);
-            if(this.isInteractive) {
-                display.inputHandler();
+            for(Display display : displays) {
+                display.printData(sugarMeasurements[0], remainingInsulin, sugarState, insulinState);
             }
+            // only first display can handle input
+            displays.get(0).inputHandler();
             regulateSugar();
             updateSugarMeasurement();
         }
@@ -87,7 +91,9 @@ public class Controller {
             }
         }
         catch (InsulineAvailabilityException e){
-            display.printError("# Not Enough insulin, fill the reservoir #");
+            for(Display display : displays) {
+                display.printError("# Not Enough insulin, fill the reservoir #");
+            }
         }
     }
 

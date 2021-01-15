@@ -12,9 +12,6 @@ public abstract class BloodModel {
     private int incrementValue;
     private int incrementRate;
 
-    // instance detail flag
-    private boolean isInterative;
-
     public BloodModel(int sugarLevel, int incrementValue, int incrementRate) throws LethalSugarValuesException {
         this.sugarLevel = sugarLevel;
         this.incrementValue = incrementValue;
@@ -46,16 +43,8 @@ public abstract class BloodModel {
         this.checkSugarValuesConsistency();
     }
 
-    protected void setInteractive(boolean interactive) {
-        isInterative = interactive;
-    }
-
     // different implementations
     public abstract int actualSugarLevel() throws LethalSugarValuesException;
-
-    public boolean isInterative() {
-        return isInterative;
-    }
 
     // only for testing purpose
     public static int getMaxSugar() {

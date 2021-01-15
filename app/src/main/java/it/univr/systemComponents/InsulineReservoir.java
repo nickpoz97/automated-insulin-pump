@@ -7,8 +7,15 @@ public class InsulineReservoir {
     private int amount;
 
     public InsulineReservoir(int amount){
-        this.amount = Math.min(amount, 0); // no below zero values allowed
-        this.amount = Math.max(amount, capacity);
+        if(amount >= 0 && amount <= capacity){
+            this.amount = amount;
+        }
+        else if(amount < 0){
+            this.amount = 0;
+        }
+        else if (amount > capacity){
+            this.amount = capacity;
+        }
     }
 
     public int take(int requestedQuantity) throws InsulineAvailabilityException {
@@ -20,10 +27,14 @@ public class InsulineReservoir {
     }
 
     public void add(int addedQuantity){
-        amount = Math.max(addedQuantity + amount, capacity);
+        amount = Math.min(addedQuantity + amount, capacity);
     }
 
     public int getAmount(){
         return amount;
+    }
+
+    public static int getCapacity() {
+        return capacity;
     }
 }

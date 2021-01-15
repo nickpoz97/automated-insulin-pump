@@ -3,22 +3,36 @@ package it.univr.systemComponents;
 import it.univr.bloodModels.BloodModel;
 import it.univr.states.InsulinStates;
 import it.univr.states.SugarStates;
+import it.univr.systemComponents.InsulineReservoir;
 
 import java.util.Calendar;
 import java.util.Scanner;
 
 public class Display {
-    private static int lastDisplayId = 0;
-    private int displayId;
+    private static int lastDisplayId = -1;
+    private final int displayId;
     // only used in interactive mode
-    private BloodModel bloodModel;
-    private InsulineReservoir insulineReservoir;
+    private static BloodModel displayBloodModel;
+    private static InsulineReservoir displayInsulineReservoir;
 
-    public Display(BloodModel bloodModel, InsulineReservoir insulineReservoir){
+    public Display(){
         lastDisplayId++;
         this.displayId = lastDisplayId;
-        this.bloodModel = bloodModel;
-        this.insulineReservoir = insulineReservoir;
+    }
+
+    public Display(BloodModel bloodModel, InsulineReservoir insulineReservoir){
+        this();
+        // only first display can be interactive (testing)
+        if(this.displayId == 0) {
+            displayInsulineReservoir = insulineReservoir;
+            displayBloodModel = bloodModel;
+        }
+    }
+
+    private boolean isInteractive(){
+        return displayInsulineReservoir != null
+                && displayBloodModel != null
+                && this.displayId == 0;
     }
 
     public void printData(int sugar, int remainingInsulin, SugarStates sugarStatus, InsulinStates insulinStatus){
@@ -69,6 +83,10 @@ public class Display {
     }
 
     public void inputHandler() {
+        if(this.isInteractive()){
+            return;
+        }
+
         Scanner keyboard = new Scanner(System.in);
         String choice = "_"; // ! c
 
@@ -95,12 +113,12 @@ public class Display {
     private void processReservoirFilling(Scanner keyboard) {
         System.out.print("Insert insulin amount (negative values are equal to 0): ");
         int value = Math.max(keyboard.nextByte(),0);
-        this.insulineReservoir.add(value);
+        displayInsulineReservoir.add(value);
     }
 
     private void processSugarAddition(Scanner keyboard) {
         System.out.print("Insert sugar amount (negative values are equal to 0): ");
         int value = Math.max(keyboard.nextByte(), 0);
-        this.bloodModel.addSugar(value);
+        displayBloodModel.addSugar(value);
     }
 }

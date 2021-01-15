@@ -9,7 +9,7 @@ import it.univr.exceptions.LethalSugarValuesException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class BloodModelTestes {
+public class BloodModelTests {
     @Test
     public void testInvalidBloodDataInstance(){
         try {
