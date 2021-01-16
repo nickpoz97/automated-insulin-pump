@@ -36,7 +36,7 @@ public class InsulineReservoirTests {
     }
 
     @Test
-    public void addInsulinTest(){
+    public void addAndTakeInsulinTest(){
         insulineReservoir = new InsulineReservoir(0);
         insulineReservoir.add(40);
         assertEquals(40, insulineReservoir.getAmount());
@@ -48,7 +48,7 @@ public class InsulineReservoirTests {
             assertEquals(InsulineReservoir.getCapacity() - 100, insulineReservoir.getAmount());
         }
         catch (InsulineAvailabilityException e){
-            assertTrue(true);
+            fail();
         }
     }
 }

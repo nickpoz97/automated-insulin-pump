@@ -1,6 +1,7 @@
 package it.univr.systemComponents;
 
 import it.univr.exceptions.InsulineAvailabilityException;
+import it.univr.exceptions.LethalSugarValuesException;
 import it.univr.states.InsulinStates;
 import it.univr.states.SugarStates;
 
@@ -22,10 +23,18 @@ public class Controller {
     private int remainingInsulin;
     private int[] sugarMeasurements = new int[3];
 
+    // used in testing mode
+    private InputHandler inputHandler = null;
+
     public Controller(Pump pump, Display display, SugarSensor sugarSensor) {
         this.pump = pump;
         displays.add(display);
         this.sugarSensor = sugarSensor;
+    }
+
+    public Controller(Pump pump, Display display, SugarSensor sugarSensor, InputHandler inputHandler){
+        this(pump, display, sugarSensor);
+        this.inputHandler = inputHandler;
     }
 
     public void addDisplay(){
@@ -44,16 +53,25 @@ public class Controller {
             for(Display display : displays) {
                 display.printData(sugarMeasurements[0], remainingInsulin, sugarState, insulinState);
             }
-            // only first display can handle input
-            displays.get(0).inputHandler();
+            if(inputHandler != null){
+                inputHandler.processInput();
+            }
             regulateSugar();
             updateSugarMeasurement();
         }
     }
 
     private void check(){
-        checkSugarStatus();
-        checkInsulinStatus();
+        try {
+            checkSugarStatus();
+            checkInsulinStatus();
+        }
+        catch(LethalSugarValuesException e){
+            for(Display d : displays){
+                d.printError("# Lethal sugar level reached #");
+                System.exit(1);
+            }
+        }
     }
 
     private void checkSugarStatus() {

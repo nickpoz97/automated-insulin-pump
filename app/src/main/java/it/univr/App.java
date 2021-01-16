@@ -3,17 +3,18 @@
  */
 package it.univr;
 
+import java.util.Calendar;
+
 public class App {
     public String getGreeting() {
         return "Hello World!";
     }
 
     public static void main(String[] args) {
-        int sugarLevel = 0;
+        int sugarLevel = 100;
         int incrementValue = 0;
         int incrementRate = 0;
         int insulinAmount = 30;
-        boolean isInteractive = true;
-        new AutomatedInsulinPump(sugarLevel, incrementValue, incrementRate, insulinAmount, isInteractive);
+        new AutomatedInsulinPump(sugarLevel, incrementValue, incrementRate, insulinAmount, true);
     }
 }

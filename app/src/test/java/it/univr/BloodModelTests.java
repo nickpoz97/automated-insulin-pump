@@ -45,17 +45,17 @@ public class BloodModelTests {
 
     @Test
     public void testLoweringSugar(){
-        int incrementValue = -4;
-        int incrementRate = -2;
+        int startingIncrementValue = -4;
+        int startingIncrementRate = -2;
         int startingSugarLevel = (BloodModel.getMinSugar()+ BloodModel.getMaxSugar())/2;
-        BloodModel bloodModel = new InteractiveBloodModel(startingSugarLevel, incrementValue, incrementRate);
-        assertEquals(bloodModel.getIncrementRate(), incrementRate);
+        BloodModel bloodModel = new InteractiveBloodModel(startingSugarLevel, startingIncrementValue, startingIncrementRate);
 
-        assertEquals(bloodModel.getIncrementValue(), incrementValue);
+        assertEquals(bloodModel.getIncrementRate(), startingIncrementRate);
+        assertEquals(bloodModel.getIncrementValue(), startingIncrementValue);
         assertEquals(bloodModel.actualSugarLevel(), startingSugarLevel);
 
-        assertEquals(bloodModel.getIncrementValue(), incrementValue + incrementRate);
-        assertEquals(bloodModel.actualSugarLevel(), startingSugarLevel + incrementValue);
+        assertEquals(bloodModel.getIncrementValue(), startingIncrementValue + startingIncrementRate);
+        assertEquals(bloodModel.actualSugarLevel(), startingSugarLevel + startingIncrementValue);
     }
 
     @Test(expected = LethalSugarValuesException.class)
