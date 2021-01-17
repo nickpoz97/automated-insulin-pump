@@ -18,6 +18,10 @@ public class InsulineReservoir {
         }
     }
 
+    public InsulineReservoir(){
+        this(capacity);
+    }
+
     public int take(int requestedQuantity) throws InsulineAvailabilityException {
         this.amount -= requestedQuantity;
         if(this.amount < 0){

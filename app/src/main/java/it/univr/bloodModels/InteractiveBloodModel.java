@@ -8,6 +8,12 @@ public class InteractiveBloodModel extends BloodModel {
         super(sugarLevel, incrementValue, incrementRate);
     }
 
+    public InteractiveBloodModel(){
+        super((InteractiveBloodModel.getMinSugar()+InteractiveBloodModel.getMaxSugar())/2,
+                0,
+                0);
+    }
+
     // sugar level updated when requested
     @Override
     public int actualSugarLevel() throws LethalSugarValuesException{
