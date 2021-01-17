@@ -24,7 +24,7 @@ public class InputHandler {
             } else if (choice.equals("s")) {
                 processSugarAddition(keyboard);
             }
-            choice = keyboard.next();
+            choice = keyboard.nextLine();
         }
         keyboard.close();
     }
@@ -39,13 +39,27 @@ public class InputHandler {
 
     private void processReservoirFilling(Scanner keyboard) {
         System.out.print("Insert insulin amount (negative values are equal to 0): ");
-        int value = Math.max(keyboard.nextByte(),0);
+        int value;
+        try {
+            value = Integer.parseInt(keyboard.nextLine());
+            value = Math.max(value, 0);
+        }
+        catch (NumberFormatException e){
+            value = 0;
+        }
         insulineReservoir.add(value);
     }
 
     private void processSugarAddition(Scanner keyboard) {
         System.out.print("Insert sugar amount (negative values are equal to 0): ");
-        int value = Math.max(keyboard.nextByte(), 0);
+        int value;
+        try {
+            value = Integer.parseInt(keyboard.nextLine());
+            value = Math.max(value, 0);
+        }
+        catch (NumberFormatException e){
+            value = 0;
+        }
         bloodModel.addSugar(value);
     }
 }

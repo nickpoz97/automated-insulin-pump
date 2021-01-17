@@ -39,8 +39,7 @@ public abstract class BloodModel {
     public void injectInsulin(int amount){ this.incrementRate -= amount; }
 
     public void addSugar(int amount) throws LethalSugarValuesException{
-        this.sugarLevel += amount;
-        this.checkSugarValuesConsistency();
+        this.incrementRate += amount;
     }
 
     // different implementations
