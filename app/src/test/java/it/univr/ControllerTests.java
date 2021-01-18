@@ -24,8 +24,7 @@ public class ControllerTests {
 
     @Test
     public void test(){
-        this.bloodModel.addSugar(5);
-        this.controller.play();
+        this.bloodModel.addSugar(2);
         this.controller.play();
         assertEquals(0, bloodModel.getIncrementRate());
     }

@@ -4,7 +4,7 @@ import it.univr.exceptions.LethalSugarValuesException;
 
 public abstract class BloodModel {
     // boundaries
-    private static final int maxSugar = 150;
+    private static final int maxSugar = 200;
     private static final int minSugar = 50;
 
     // dinamic data
@@ -38,7 +38,7 @@ public abstract class BloodModel {
     // injected insulin decreases increment rate
     public void injectInsulin(int amount){ this.incrementRate -= amount; }
 
-    public void addSugar(int amount) throws LethalSugarValuesException{
+    public void addSugar(int amount) {
         this.incrementRate += amount;
     }
 

@@ -17,8 +17,7 @@ public class InteractiveBloodModel extends BloodModel {
     // sugar level updated when requested
     @Override
     public int actualSugarLevel() throws LethalSugarValuesException{
-        int actual = super.getSugarLevel();
         super.updateSugarLevel();
-        return actual;
+        return  super.getSugarLevel();
     }
 }

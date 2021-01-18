@@ -20,7 +20,7 @@ public class SugarSensorTests {
 
     @Test
     public void testGetSugarInBlood(){
-        assertEquals(initialSugarValue, sugarSensor.getSugarInBlood());
+        assertEquals(initialSugarValue + 4, sugarSensor.getSugarInBlood());
     }
 
 }
