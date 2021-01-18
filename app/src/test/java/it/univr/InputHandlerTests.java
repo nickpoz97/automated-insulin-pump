@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,6 +24,8 @@ public class InputHandlerTests {
         bloodModel = new InteractiveBloodModel();
         insulineReservoir = new InsulineReservoir(100);
         inputHandler = new InputHandler(bloodModel, insulineReservoir);
+        // delete output
+        System.setOut(new PrintStream(OutputStream.nullOutputStream()));
     }
 
     @Test

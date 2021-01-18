@@ -23,15 +23,20 @@ public class Controller {
     private int remainingInsulin;
     private int[] sugarMeasurements = new int[3];
 
-    // used in testing mode
     private InputHandler inputHandler = null;
 
     public Controller(Pump pump, Display display, SugarSensor sugarSensor) {
         this.pump = pump;
         displays.add(display);
         this.sugarSensor = sugarSensor;
+
+        // initialize measurements (position 0 is for most recent check)
+        for(int i = sugarMeasurements.length-1; i >= 0 ; i--){
+            sugarMeasurements[i] = sugarSensor.getSugarInBlood();
+        }
     }
 
+    // testingmode
     public Controller(Pump pump, Display display, SugarSensor sugarSensor, InputHandler inputHandler){
         this(pump, display, sugarSensor);
         this.inputHandler = inputHandler;
@@ -41,24 +46,17 @@ public class Controller {
         displays.add(new Display());
     }
 
-    // loop for Controller
+    // control iteration
     public void play(){
-        // initialize measurements (position 0 is for most recent check)
-        for(int i = sugarMeasurements.length-1; i >= 0 ; i++){
-            sugarMeasurements[i] = sugarSensor.getSugarInBlood();
+        check();
+        for(Display display : displays) {
+            display.printData(sugarMeasurements[0], remainingInsulin, sugarState, insulinState);
         }
-
-        while(true){
-            check();
-            for(Display display : displays) {
-                display.printData(sugarMeasurements[0], remainingInsulin, sugarState, insulinState);
-            }
-            if(inputHandler != null){
-                inputHandler.processInput();
-            }
-            regulateSugar();
-            updateSugarMeasurement();
+        if(inputHandler != null){
+            inputHandler.processInput();
         }
+        regulateSugar();
+        updateSugarMeasurement();
     }
 
     private void check(){

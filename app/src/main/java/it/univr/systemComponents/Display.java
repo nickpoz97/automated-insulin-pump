@@ -23,7 +23,7 @@ public class Display {
 
         System.out.println();
         System.out.println("Display id: " + displayId);
-        System.out.format("Date: %td/%tm/%tY %tT", calendar);
+        System.out.format("Date: %td/%tm/%tY %tT", calendar,calendar,calendar,calendar);
         System.out.println("Sugar level: " + sugar);
         System.out.println("Remaining insulin: " + remainingInsulin);
         System.out.println(statusMessage);
