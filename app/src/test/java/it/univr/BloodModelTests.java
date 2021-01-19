@@ -49,8 +49,8 @@ public class BloodModelTests {
     }
 
     private void changingSugarAssertions() {
-        assertEquals(bloodModel.retrieveSugarLevel(), bloodModel.getInitialSugarLevel() + bloodModel.getIncrementRate());
-        assertEquals(bloodModel.retrieveSugarLevel(), bloodModel.getInitialSugarLevel() + 2*bloodModel.getIncrementRate());
+        assertEquals(bloodModel.retrieveSugarLevel(), bloodModel.getBaseSugarLevel() + bloodModel.getIncrementRate());
+        assertEquals(bloodModel.retrieveSugarLevel(), bloodModel.getBaseSugarLevel() + 2*bloodModel.getIncrementRate());
     }
 
     @Test(expected = LethalSugarValuesException.class)

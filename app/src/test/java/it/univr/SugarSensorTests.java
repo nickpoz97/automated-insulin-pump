@@ -20,7 +20,7 @@ public class SugarSensorTests {
 
     @Test
     public void testGetSugarInBlood(){
-        assertEquals(bloodModel.getInitialSugarLevel() + bloodModel.getIncrementRate(), sugarSensor.getSugarInBlood());
+        assertEquals(bloodModel.getBaseSugarLevel() + bloodModel.getIncrementRate(), sugarSensor.getSugarInBlood());
     }
 
 }

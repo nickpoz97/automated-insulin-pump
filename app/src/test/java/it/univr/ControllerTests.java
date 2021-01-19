@@ -25,7 +25,7 @@ public class ControllerTests {
 
     @Test
     public void testFunctioning(){
-        int startingSugar = bloodModel.getInitialSugarLevel();
+        int startingSugar = bloodModel.getBaseSugarLevel();
         this.bloodModel.addSugar(2);
         this.controller.play();
 
@@ -44,5 +44,8 @@ public class ControllerTests {
         }
 
         assertTrue(bloodModel.getSugarLevel() < Controller.getUpperSugarBound());
+        bloodModel.addSugar(1);
+        this.controller.play();
+        assertEquals(0, this.bloodModel.getIncrementRate());
     }
 }
