@@ -24,7 +24,7 @@ public class AutomatedInsulinPump {
 
     private void instantiateBloodModel(int sugarLevel, int incrementValue, int incrementRate) {
         if(testingMode)
-            this.bloodModel = new InteractiveBloodModel(sugarLevel, incrementValue, incrementRate);
+            this.bloodModel = new InteractiveBloodModel(sugarLevel, incrementRate);
     }
 
     private void instantiateController(Pump pump, Display display, SugarSensor sugarSensor){

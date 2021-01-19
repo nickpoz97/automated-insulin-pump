@@ -10,6 +10,6 @@ public class SugarSensor {
     }
 
     public int getSugarInBlood(){
-        return bloodModel.actualSugarLevel();
+        return bloodModel.retrieveSugarLevel();
     }
 }

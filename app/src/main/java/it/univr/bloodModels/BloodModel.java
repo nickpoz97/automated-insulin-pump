@@ -8,42 +8,56 @@ public abstract class BloodModel {
     private static final int minSugar = 50;
 
     // dinamic data
-    private int sugarLevel;
-    private int incrementValue;
+    private int initialSugarLevel;
+    private int actualSugarLevel;
     private int incrementRate;
+    private int time = 0;
 
-    public BloodModel(int sugarLevel, int incrementValue, int incrementRate) throws LethalSugarValuesException {
-        this.sugarLevel = sugarLevel;
-        this.incrementValue = incrementValue;
+    public BloodModel(int initialSugarLevel, int incrementRate) throws LethalSugarValuesException {
+        this.initialSugarLevel = initialSugarLevel;
+        this.actualSugarLevel = initialSugarLevel;
         this.incrementRate = incrementRate;
         this.checkSugarValuesConsistency();
     }
 
+    public BloodModel(){
+        this((maxSugar + minSugar)/2, 0);
+    }
+
+    public int getInitialSugarLevel() {
+        return initialSugarLevel;
+    }
+
     private void checkSugarValuesConsistency() throws LethalSugarValuesException {
-        if(this.sugarLevel < minSugar || this.sugarLevel > maxSugar){
-            throw new LethalSugarValuesException(minSugar, maxSugar,this.sugarLevel);
+        if(this.actualSugarLevel < minSugar || this.actualSugarLevel > maxSugar){
+            throw new LethalSugarValuesException(minSugar, maxSugar,this.actualSugarLevel);
         }
     }
 
     protected void updateSugarLevel() throws LethalSugarValuesException { // time independent and call number dependent
-        this.sugarLevel += this.incrementValue;
-        this.incrementValue += incrementRate;
+        this.time++;
+        this.actualSugarLevel = this.initialSugarLevel + this.incrementRate * this.time;
         this.checkSugarValuesConsistency();
     }
 
-    protected int getSugarLevel(){
-        return this.sugarLevel;
+    // only used for testing
+    public int getSugarLevel(){
+        return this.actualSugarLevel;
     }
 
     // injected insulin decreases increment rate
-    public void injectInsulin(int amount){ this.incrementRate -= amount; }
+    public void injectInsulin(int amount){
+        this.initialSugarLevel = this.actualSugarLevel;
+        this.time = 0;
+        this.incrementRate -= amount;
+    }
 
     public void addSugar(int amount) {
         this.incrementRate += amount;
     }
 
     // different implementations
-    public abstract int actualSugarLevel() throws LethalSugarValuesException;
+    public abstract int retrieveSugarLevel() throws LethalSugarValuesException;
 
     // only for testing purpose
     public static int getMaxSugar() {
@@ -52,10 +66,6 @@ public abstract class BloodModel {
 
     public static int getMinSugar() {
         return minSugar;
-    }
-
-    public int getIncrementValue() {
-        return incrementValue;
     }
 
     public int getIncrementRate() {

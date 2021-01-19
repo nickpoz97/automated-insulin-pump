@@ -12,7 +12,7 @@ import static java.lang.Math.*;
 
 public class Controller {
     private static final int lowerSugarBound = 80;
-    private static final int upperSugarBound = 100;
+    private static final int upperSugarBound = 180;
     private static final int lowerInsulinBound = 10;
 
     private final Pump pump;
@@ -46,11 +46,9 @@ public class Controller {
 
     // control iteration
     public void play(){
-        // initialize measurements (position 0 is for most recent check)
-        oldMeasurement = sugarSensor.getSugarInBlood();
-        lastMeasurement = sugarSensor.getSugarInBlood();
-
+        updateSugarMeasurement();
         check();
+
         for(Display display : displays) {
             display.printData(lastMeasurement, remainingInsulin, sugarState, insulinState);
         }
@@ -58,7 +56,6 @@ public class Controller {
             inputHandler.processInput();
         }
         regulateSugar();
-        //updateSugarMeasurement();
     }
 
     private void check(){
@@ -102,9 +99,9 @@ public class Controller {
 
         try {
             if(increment > 1){ // sugar raising quickly
-                pump.injectInsulin(max(0, increment));
+                pump.injectInsulin(increment);
             }
-            else if(sugarState == SugarStates.HIGHSUGAR){
+            else if(sugarState == SugarStates.HIGHSUGAR && increment >= 0){
                 pump.injectInsulin(1);
             }
         }
@@ -118,5 +115,13 @@ public class Controller {
     private void updateSugarMeasurement() {
         this.oldMeasurement = sugarSensor.getSugarInBlood();
         this.lastMeasurement = sugarSensor.getSugarInBlood();
+    }
+
+    public static int getLowerSugarBound() {
+        return lowerSugarBound;
+    }
+
+    public static int getUpperSugarBound() {
+        return upperSugarBound;
     }
 }
