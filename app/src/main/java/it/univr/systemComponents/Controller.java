@@ -8,9 +8,11 @@ import it.univr.states.SugarStates;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.*;
+
 public class Controller {
     private static final int lowerSugarBound = 80;
-    private static final int upperSugarBound = 100;
+    private static final int upperSugarBound = 180;
     private static final int lowerInsulinBound = 10;
 
     private final Pump pump;
@@ -21,7 +23,8 @@ public class Controller {
     private InsulinStates insulinState = InsulinStates.GOOD;
 
     private int remainingInsulin;
-    private int[] sugarMeasurements = new int[3];
+    private int oldMeasurement;
+    private int lastMeasurement;
 
     private InputHandler inputHandler = null;
 
@@ -29,11 +32,6 @@ public class Controller {
         this.pump = pump;
         displays.add(display);
         this.sugarSensor = sugarSensor;
-
-        // initialize measurements (position 0 is for most recent check)
-        for(int i = sugarMeasurements.length-1; i >= 0 ; i--){
-            sugarMeasurements[i] = sugarSensor.getSugarInBlood();
-        }
     }
 
     // testingmode
@@ -48,15 +46,16 @@ public class Controller {
 
     // control iteration
     public void play(){
+        updateSugarMeasurement();
         check();
+
         for(Display display : displays) {
-            display.printData(sugarMeasurements[0], remainingInsulin, sugarState, insulinState);
+            display.printData(lastMeasurement, remainingInsulin, sugarState, insulinState);
         }
         if(inputHandler != null){
             inputHandler.processInput();
         }
         regulateSugar();
-        updateSugarMeasurement();
     }
 
     private void check(){
@@ -73,11 +72,10 @@ public class Controller {
     }
 
     private void checkSugarStatus() {
-        int lastSugarMeasurement = sugarMeasurements[0];
-        if (lastSugarMeasurement < lowerSugarBound){
+        if (this.lastMeasurement < lowerSugarBound){
             sugarState = SugarStates.LOWSUGAR;
         }
-        else if (lastSugarMeasurement > upperSugarBound){
+        else if (this.lastMeasurement > upperSugarBound){
             sugarState = SugarStates.HIGHSUGAR;
         }
         else{
@@ -96,14 +94,15 @@ public class Controller {
     }
 
     private void regulateSugar() {
-        int ir = calculateIncrementRate();
+        int increment = lastMeasurement - oldMeasurement;
+        System.out.println("increment: " + increment);
 
         try {
-            if(sugarState == SugarStates.HIGHSUGAR){
-                pump.injectInsulin(ir + 1);
+            if(increment > 1){ // sugar raising quickly
+                pump.injectInsulin(increment);
             }
-            else if(ir > 1){ // sugar raising quickly
-                pump.injectInsulin(ir);
+            else if(sugarState == SugarStates.HIGHSUGAR && increment >= 0){
+                pump.injectInsulin(1);
             }
         }
         catch (InsulineAvailabilityException e){
@@ -113,20 +112,16 @@ public class Controller {
         }
     }
 
-    private int calculateIncrementRate() {
-        int d1 = sugarMeasurements[0] - sugarMeasurements[1];
-        int d2 = sugarMeasurements[1] - sugarMeasurements[2];
-
-        return d2-d1;
+    private void updateSugarMeasurement() {
+        this.oldMeasurement = sugarSensor.getSugarInBlood();
+        this.lastMeasurement = sugarSensor.getSugarInBlood();
     }
 
-    private void updateSugarMeasurement() {
-        int nMeasurements = sugarMeasurements.length;
-        // circular shifting
-        for(int i = 0; i < nMeasurements ; i++){
-            sugarMeasurements[(i+1)%nMeasurements] = sugarMeasurements[i];
-        }
-        // oldest measurement overwritten with newest
-        sugarMeasurements[0] = sugarSensor.getSugarInBlood();
+    public static int getLowerSugarBound() {
+        return lowerSugarBound;
+    }
+
+    public static int getUpperSugarBound() {
+        return upperSugarBound;
     }
 }

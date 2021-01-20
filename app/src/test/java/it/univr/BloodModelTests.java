@@ -6,21 +6,29 @@ package it.univr;
 import it.univr.bloodModels.BloodModel;
 import it.univr.bloodModels.InteractiveBloodModel;
 import it.univr.exceptions.LethalSugarValuesException;
+import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class BloodModelTests {
+    private BloodModel bloodModel;
+
+    @Before
+    public void initialize() {
+        this.bloodModel = new InteractiveBloodModel();
+    }
+
     @Test
     public void testInvalidBloodDataInstance(){
         try {
-            BloodModel bloodModel = new InteractiveBloodModel(BloodModel.getMaxSugar()+1, 0, 0);
+            this.bloodModel = new InteractiveBloodModel(BloodModel.getMaxSugar()+1, 0);
             fail();
         }
         catch (LethalSugarValuesException e){
             assertTrue(true);
         }
         try{
-            BloodModel bloodModel = new InteractiveBloodModel(BloodModel.getMinSugar()-1, 0, 0);
+            this.bloodModel = new InteractiveBloodModel(BloodModel.getMinSugar()-1, 0);
             fail();
         }
         catch (LethalSugarValuesException e){
@@ -30,69 +38,47 @@ public class BloodModelTests {
 
     @Test
     public void testRaisingSugar(){
-        int incrementValue = 4;
-        int incrementRate = 2;
-        int startingSugarLevel = (BloodModel.getMinSugar()+ BloodModel.getMaxSugar())/2;
-        BloodModel bloodModel = new InteractiveBloodModel(startingSugarLevel, incrementValue, incrementRate);
-        assertEquals(bloodModel.getIncrementRate(), incrementRate);
-
-        assertEquals(bloodModel.getIncrementValue(), incrementValue);
-        assertEquals(bloodModel.actualSugarLevel(), startingSugarLevel);
-
-        assertEquals(bloodModel.getIncrementValue(), incrementValue + incrementRate);
-        assertEquals(bloodModel.actualSugarLevel(), startingSugarLevel + incrementValue);
+        bloodModel.addSugar(2);
+        changingSugarAssertions();
     }
 
     @Test
     public void testLoweringSugar(){
-        int startingIncrementValue = -4;
-        int startingIncrementRate = -2;
-        int startingSugarLevel = (BloodModel.getMinSugar()+ BloodModel.getMaxSugar())/2;
-        BloodModel bloodModel = new InteractiveBloodModel(startingSugarLevel, startingIncrementValue, startingIncrementRate);
+        bloodModel.injectInsulin(2);
+        changingSugarAssertions();
+    }
 
-        assertEquals(bloodModel.getIncrementRate(), startingIncrementRate);
-        assertEquals(bloodModel.getIncrementValue(), startingIncrementValue);
-        assertEquals(bloodModel.actualSugarLevel(), startingSugarLevel);
-
-        assertEquals(bloodModel.getIncrementValue(), startingIncrementValue + startingIncrementRate);
-        assertEquals(bloodModel.actualSugarLevel(), startingSugarLevel + startingIncrementValue);
+    private void changingSugarAssertions() {
+        assertEquals(bloodModel.retrieveSugarLevel(), bloodModel.getBaseSugarLevel() + bloodModel.getIncrementRate());
+        assertEquals(bloodModel.retrieveSugarLevel(), bloodModel.getBaseSugarLevel() + 2*bloodModel.getIncrementRate());
     }
 
     @Test(expected = LethalSugarValuesException.class)
     public void testExceedingSugarValue(){
-        int incrementValue = 4;
-        int incrementRate = 2;
-        int startingSugarLevel = (BloodModel.getMinSugar()+ BloodModel.getMaxSugar())/2;
-        BloodModel bloodModel = new InteractiveBloodModel(startingSugarLevel, incrementValue, incrementRate);
+        bloodModel.addSugar(2);
         for(int i = 0 ; i < 1000 ; i++){
             // it also updates sugar level in interactiveBloodData
-            bloodModel.actualSugarLevel();
+            bloodModel.retrieveSugarLevel();
         }
         fail();
     }
 
     @Test(expected = LethalSugarValuesException.class)
     public void testLowSugarValue(){
-        int incrementValue = -4;
-        int incrementRate = -2;
-        int startingSugarLevel = (BloodModel.getMinSugar()+ BloodModel.getMaxSugar())/2;
-        BloodModel bloodModel = new InteractiveBloodModel(startingSugarLevel, incrementValue, incrementRate);
+        bloodModel.injectInsulin(2);
+
         for(int i = 0 ; i < 1000 ; i++){
             // it also updates sugar level in interactiveBloodData
-            bloodModel.actualSugarLevel();
+            bloodModel.retrieveSugarLevel();
         }
         fail();
     }
 
     @Test
     public void insulinInjectionTest(){
-        int incrementValue = 4;
-        int incrementRate = 2;
-        int startingSugarLevel = (BloodModel.getMinSugar()+ BloodModel.getMaxSugar())/2;
-        BloodModel bloodModel = new InteractiveBloodModel(startingSugarLevel, incrementValue, incrementRate);
         bloodModel.injectInsulin(2);
-        assertEquals(bloodModel.getIncrementRate(), 0);
+        assertEquals(-2, bloodModel.getIncrementRate());
         bloodModel.injectInsulin(10);
-        assertEquals(bloodModel.getIncrementRate(), -10);
+        assertEquals(-12, bloodModel.getIncrementRate());
     }
 }

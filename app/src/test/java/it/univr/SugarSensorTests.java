@@ -10,17 +10,17 @@ import static org.junit.Assert.*;
 public class SugarSensorTests {
     private BloodModel bloodModel;
     private SugarSensor sugarSensor;
-    private static int initialSugarValue = (BloodModel.getMaxSugar()+BloodModel.getMinSugar())/2;
 
     @Before
     public void initializeBloodModel(){
-        bloodModel = new InteractiveBloodModel(initialSugarValue, 4, 5);
+        this.bloodModel = new InteractiveBloodModel();
         sugarSensor = new SugarSensor(bloodModel);
+        bloodModel.addSugar(5);
     }
 
     @Test
     public void testGetSugarInBlood(){
-        assertEquals(initialSugarValue, sugarSensor.getSugarInBlood());
+        assertEquals(bloodModel.getBaseSugarLevel() + bloodModel.getIncrementRate(), sugarSensor.getSugarInBlood());
     }
 
 }
