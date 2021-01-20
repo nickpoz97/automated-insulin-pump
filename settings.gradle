@@ -8,4 +8,4 @@
  */
 
 rootProject.name = 'automated-insulin-pump'
-include('App')
+include('app')
