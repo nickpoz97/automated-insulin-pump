@@ -8,8 +8,6 @@ import it.univr.states.SugarStates;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.*;
-
 public class Controller {
     private static final int lowerSugarBound = 80;
     private static final int upperSugarBound = 180;
@@ -19,8 +17,8 @@ public class Controller {
     private final List<Display> displays = new ArrayList<>(2);
     private final SugarSensor sugarSensor;
 
-    private SugarStates sugarState = SugarStates.GOOD;
-    private InsulinStates insulinState = InsulinStates.GOOD;
+    private SugarStates sugarState;
+    private InsulinStates insulinState;
 
     private int remainingInsulin;
     private int oldMeasurement;

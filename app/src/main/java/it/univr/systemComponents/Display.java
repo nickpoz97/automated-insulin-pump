@@ -9,20 +9,12 @@ import java.util.Calendar;
 import java.util.Scanner;
 
 public class Display {
-    private static int lastDisplayId = -1;
-    private final int displayId;
-
-    public Display(){
-        lastDisplayId++;
-        this.displayId = lastDisplayId;
-    }
 
     public void printData(int sugar, int remainingInsulin, SugarStates sugarStatus, InsulinStates insulinStatus){
         Calendar calendar = Calendar.getInstance();
         String statusMessage = interpretStatus(sugarStatus, insulinStatus);
 
         System.out.println();
-        System.out.println("Display id: " + displayId);
         System.out.format("Date: %td/%tm/%tY %tT\n", calendar,calendar,calendar,calendar);
         System.out.println("Sugar level: " + sugar);
         System.out.println("Remaining insulin: " + remainingInsulin);
@@ -62,13 +54,5 @@ public class Display {
 
     public void printError(String message){
         System.out.println("\n+message+\n");
-    }
-
-    public static int getLastDisplayId() {
-        return lastDisplayId;
-    }
-
-    public int getDisplayId() {
-        return displayId;
     }
 }
