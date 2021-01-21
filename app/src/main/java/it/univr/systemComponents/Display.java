@@ -7,11 +7,14 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Display {
+<<<<<<< HEAD
     private Queue<String> infoQueue;
 
     public Display(){
         infoQueue = new LinkedList<>();
     }
+=======
+>>>>>>> f9f19cf2608b47e6e85a0169bc6ff05289b1becb
 
     public void printData(int sugar, int remainingInsulin, SugarStates sugarStatus, InsulinStates insulinStatus){
         Calendar calendar = Calendar.getInstance();
@@ -65,6 +68,7 @@ public class Display {
         }
     }
 
+<<<<<<< HEAD
     public void addInfo(String message){
         infoQueue.add(message);
     }
@@ -73,5 +77,9 @@ public class Display {
         while (!infoQueue.isEmpty()){
             System.out.println(infoQueue.poll());
         }
+=======
+    public void printError(String message){
+        System.out.println("\n+message+\n");
+>>>>>>> f9f19cf2608b47e6e85a0169bc6ff05289b1becb
     }
 }
