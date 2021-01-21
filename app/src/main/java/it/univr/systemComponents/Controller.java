@@ -7,11 +7,8 @@ import it.univr.states.SugarStates;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< HEAD
 import static java.lang.Math.max;
 
-=======
->>>>>>> f9f19cf2608b47e6e85a0169bc6ff05289b1becb
 public class Controller {
     private static final int lowerSugarBound = 80;
     private static final int upperSugarBound = 180;
@@ -29,6 +26,7 @@ public class Controller {
     private int remainingInsulin;
     private int oldMeasurement;
     private int lastMeasurement;
+    private int increment;
 
     private InputHandler inputHandler = null;
 
@@ -36,6 +34,9 @@ public class Controller {
         this.pump = pump;
         displays.add(display);
         this.sugarSensor = sugarSensor;
+        this.lastMeasurement = this.sugarSensor.getSugarInBlood();
+        this.checkSugarStatus();
+        this.checkInsulinStatus();
     }
 
     // testingmode
@@ -96,7 +97,7 @@ public class Controller {
     }
 
     private void regulateSugar(){
-        int increment = lastMeasurement - oldMeasurement;
+        increment = lastMeasurement - oldMeasurement;
         this.sendIncrementInfo(increment);
         int littleAddition = 2;
         int hugeAddition = 10;
@@ -141,8 +142,9 @@ public class Controller {
     }
 
     private void updateSugarMeasurement() {
-        this.oldMeasurement = sugarSensor.getSugarInBlood();
-        this.lastMeasurement = sugarSensor.getSugarInBlood();
+        oldMeasurement = lastMeasurement;
+        lastMeasurement = sugarSensor.getSugarInBlood();
+        increment = lastMeasurement - oldMeasurement;
     }
 
     public static int getLowerSugarBound() {
