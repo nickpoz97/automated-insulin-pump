@@ -9,32 +9,35 @@ import it.univr.systemComponents.Display;
 public class AutomatedInsulinPump {
     private Controller controller;
     private BloodModel bloodModel;
-    private InsulineReservoir insulineReservoir;
-    private boolean testingMode;
+    private final InsulineReservoir insulineReservoir;
+    private final boolean testingMode;
 
-    public AutomatedInsulinPump(int sugarLevel, int incrementValue, int incrementRate, int insulinAmount, boolean testingMode){
+    public AutomatedInsulinPump(int sugarLevel, int incrementRate, int insulinAmount, boolean testingMode){
         this.testingMode = testingMode;
         this.insulineReservoir = new InsulineReservoir(insulinAmount);
-        instantiateBloodModel(sugarLevel, incrementValue, incrementRate);
+        instantiateBloodModel(sugarLevel, incrementRate);
         SugarSensor sugarSensor = new SugarSensor(bloodModel);
         Pump pump = new Pump(insulineReservoir, bloodModel);
         Display display = new Display();
-        this.controller = new Controller(pump, display, sugarSensor);
+        instantiateController(pump, display, sugarSensor);
     }
 
-    private void instantiateBloodModel(int sugarLevel, int incrementValue, int incrementRate) {
-        if(testingMode)
+    private void instantiateBloodModel(int sugarLevel, int incrementRate) {
+        if(testingMode) {
             this.bloodModel = new InteractiveBloodModel(sugarLevel, incrementRate);
+        }
     }
 
     private void instantiateController(Pump pump, Display display, SugarSensor sugarSensor){
         if(testingMode){
             InputHandler inputHandler = new InputHandler(bloodModel, insulineReservoir);
-            controller = new Controller(pump,display,sugarSensor,inputHandler);
+            this.controller = new Controller(pump,display,sugarSensor,inputHandler);
         }
     }
 
     public void run(){
-        controller.play();
+        while(true) {
+            this.controller.play();
+        }
     }
 }

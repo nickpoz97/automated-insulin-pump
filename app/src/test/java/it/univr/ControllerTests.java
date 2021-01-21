@@ -47,5 +47,6 @@ public class ControllerTests {
         bloodModel.addSugar(1);
         this.controller.play();
         assertEquals(0, this.bloodModel.getIncrementRate());
+        assertTrue(this.bloodModel.getSugarLevel() > Controller.getLowerSugarBound());
     }
 }

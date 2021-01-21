@@ -1,3 +1,3 @@
 package it.univr.states;
 
-public enum InsulinStates {LOWRESERVE, GOOD}
+public enum InsulinStates {LOWRESERVE, GOOD, EMPTY}

@@ -1,19 +1,20 @@
 package it.univr.systemComponents;
 
 import it.univr.exceptions.InsulineAvailabilityException;
-import it.univr.exceptions.LethalSugarValuesException;
 import it.univr.states.InsulinStates;
 import it.univr.states.SugarStates;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.*;
+import static java.lang.Math.max;
 
 public class Controller {
     private static final int lowerSugarBound = 80;
     private static final int upperSugarBound = 180;
-    private static final int lowerInsulinBound = 10;
+    private static final int lowerInsulinBound = 20;
+    private static final int veryHighSugarLevel = 200;
+    private static final int veryLowSugarLevel = 20;
 
     private final Pump pump;
     private final List<Display> displays = new ArrayList<>(2);
@@ -46,37 +47,32 @@ public class Controller {
 
     // control iteration
     public void play(){
-        updateSugarMeasurement();
-        check();
-
-        for(Display display : displays) {
+        for (Display display : displays) {
             display.printData(lastMeasurement, remainingInsulin, sugarState, insulinState);
         }
-        if(inputHandler != null){
+        if (inputHandler != null) {
             inputHandler.processInput();
         }
-        regulateSugar();
-    }
-
-    private void check(){
-        try {
-            checkSugarStatus();
-            checkInsulinStatus();
+        updateSugarMeasurement();
+        checkSugarStatus();
+        if(sugarState != SugarStates.LOWSUGAR && sugarState != SugarStates.VERYLOWSUGAR) {
+            regulateSugar();
         }
-        catch(LethalSugarValuesException e){
-            for(Display d : displays){
-                d.printError("# Lethal sugar level reached #");
-                System.exit(1);
-            }
-        }
+        checkInsulinStatus();
     }
 
     private void checkSugarStatus() {
-        if (this.lastMeasurement < lowerSugarBound){
+        if(this.lastMeasurement < veryLowSugarLevel){
+            sugarState = SugarStates.VERYLOWSUGAR;
+        }
+        else if (this.lastMeasurement >= veryLowSugarLevel && this.lastMeasurement < lowerSugarBound){
             sugarState = SugarStates.LOWSUGAR;
         }
-        else if (this.lastMeasurement > upperSugarBound){
+        else if (this.lastMeasurement > upperSugarBound && this.lastMeasurement <= veryHighSugarLevel){
             sugarState = SugarStates.HIGHSUGAR;
+        }
+        else if (this.lastMeasurement > veryHighSugarLevel){
+            sugarState = SugarStates.VERYHIGHSUGAR;
         }
         else{
             sugarState = SugarStates.GOOD;
@@ -85,7 +81,10 @@ public class Controller {
 
     private void checkInsulinStatus() {
         remainingInsulin = pump.getAvailableInsulin();
-        if(remainingInsulin < lowerInsulinBound){
+        if(remainingInsulin == 0){
+            insulinState = InsulinStates.EMPTY;
+        }
+        else if(remainingInsulin < lowerInsulinBound){
             insulinState = InsulinStates.LOWRESERVE;
         }
         else {
@@ -93,21 +92,47 @@ public class Controller {
         }
     }
 
-    private void regulateSugar() {
+    private void regulateSugar(){
         int increment = lastMeasurement - oldMeasurement;
-        System.out.println("increment: " + increment);
+        this.sendIncrementInfo(increment);
+        int littleAddition = 2;
+        int hugeAddition = 10;
 
-        try {
-            if(increment > 1){ // sugar raising quickly
-                pump.injectInsulin(increment);
-            }
-            else if(sugarState == SugarStates.HIGHSUGAR && increment >= 0){
-                pump.injectInsulin(1);
+        int quantity = max(0, increment);
+        if (sugarState == SugarStates.HIGHSUGAR) {
+            quantity += littleAddition;
+        }
+        else if (sugarState == SugarStates.VERYHIGHSUGAR && increment >= 0){
+            quantity += hugeAddition;
+        }
+        insulineInjection(quantity);
+    }
+
+    private void sendIncrementInfo(int increment) {
+        if(increment < 0){
+            for(Display display : displays){
+                display.addInfo("Sugar is lowering");
             }
         }
+        else if(increment > 0){
+            for(Display display : displays){
+                display.addInfo("Sugar is rising");
+            }
+        }
+        else{
+            for(Display display : displays){
+                display.addInfo("Sugar is stable");
+            }
+        }
+    }
+
+    private void insulineInjection(int quantity) {
+        try {
+            pump.injectInsulin(quantity);
+        }
         catch (InsulineAvailabilityException e){
-            for(Display display : displays) {
-                display.printError("# Not Enough insulin, fill the reservoir #");
+            for (Display display : displays){
+                display.addInfo("You need to fill the reservoir by " + e.getRequiredAmount() + 20 + " units");
             }
         }
     }

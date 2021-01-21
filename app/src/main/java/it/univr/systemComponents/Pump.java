@@ -6,8 +6,8 @@ import it.univr.exceptions.InsulineAvailabilityException;
 import static java.lang.Math.max;
 
 public class Pump {
-    private InsulineReservoir insulineReservoir;
-    private BloodModel bloodModel;
+    private final InsulineReservoir insulineReservoir;
+    private final BloodModel bloodModel;
 
     public Pump(InsulineReservoir insulineReservoir, BloodModel bloodModel){
         this.insulineReservoir = insulineReservoir;
@@ -15,8 +15,14 @@ public class Pump {
     }
 
     public void injectInsulin(int quantity) throws InsulineAvailabilityException{
-        insulineReservoir.take(max(0,quantity));
-        bloodModel.injectInsulin(quantity);
+        try {
+            insulineReservoir.take(max(0, quantity));
+            bloodModel.injectInsulin(quantity);
+        }
+        catch (InsulineAvailabilityException e){
+            bloodModel.injectInsulin(e.getAmountTaken());
+            throw e;
+        }
     }
 
     public int getAvailableInsulin(){

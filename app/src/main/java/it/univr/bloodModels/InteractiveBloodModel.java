@@ -1,10 +1,8 @@
 package it.univr.bloodModels;
 
-import it.univr.exceptions.LethalSugarValuesException;
-
 public class InteractiveBloodModel extends BloodModel {
 
-    public InteractiveBloodModel(int actualSugarLevel, int incrementRate) throws LethalSugarValuesException {
+    public InteractiveBloodModel(int actualSugarLevel, int incrementRate) {
         super(actualSugarLevel, incrementRate);
     }
 
@@ -14,7 +12,7 @@ public class InteractiveBloodModel extends BloodModel {
 
     // sugar level updated when requested
     @Override
-    public int retrieveSugarLevel() throws LethalSugarValuesException{
+    public int retrieveSugarLevel(){
         super.updateSugarLevel();
         return  super.getSugarLevel();
     }

@@ -4,9 +4,12 @@ import it.univr.bloodModels.BloodModel;
 
 import java.util.Scanner;
 
+import static java.lang.System.exit;
+
 public class InputHandler {
-    private BloodModel bloodModel;
-    private InsulineReservoir insulineReservoir;
+    private final BloodModel bloodModel;
+    private final InsulineReservoir insulineReservoir;
+    private static final Scanner keyboard = new Scanner(System.in);
 
     public InputHandler(BloodModel bloodModel, InsulineReservoir insulineReservoir){
         this.bloodModel = bloodModel;
@@ -14,19 +17,20 @@ public class InputHandler {
     }
 
     public void processInput() {
-        Scanner keyboard = new Scanner(System.in);
         String choice = "_"; // ! c
 
-        while(!choice.equals("c")) {
+        while (!choice.equals("c")) {
             printChoices();
+            choice = keyboard.nextLine();
             if (choice.equals("i")) {
                 processReservoirFilling(keyboard);
             } else if (choice.equals("s")) {
                 processSugarAddition(keyboard);
+            } else if (choice.equals("e")) {
+                keyboard.close();
+                exit(0);
             }
-            choice = keyboard.nextLine();
         }
-        keyboard.close();
     }
 
     private void printChoices() {
@@ -34,6 +38,7 @@ public class InputHandler {
         System.out.println("c) continue execution (1 minute time simulation)");
         System.out.println("i) fill insulin reservoir");
         System.out.println("s) add sugar");
+        System.out.println("e) end simulation");
         System.out.print("Your choice: ");
     }
 

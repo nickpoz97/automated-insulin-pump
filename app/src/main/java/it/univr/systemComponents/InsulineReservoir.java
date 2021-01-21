@@ -2,6 +2,8 @@ package it.univr.systemComponents;
 
 import it.univr.exceptions.InsulineAvailabilityException;
 
+import static java.lang.Math.abs;
+
 public class InsulineReservoir {
     private static final int capacity = 300;
     private int amount;
@@ -13,7 +15,7 @@ public class InsulineReservoir {
         else if(amount < 0){
             this.amount = 0;
         }
-        else if (amount > capacity){
+        else {
             this.amount = capacity;
         }
     }
@@ -22,12 +24,17 @@ public class InsulineReservoir {
         this(capacity);
     }
 
-    public int take(int requestedQuantity) throws InsulineAvailabilityException {
-        this.amount -= requestedQuantity;
-        if(this.amount < 0){
-            throw new InsulineAvailabilityException(this.amount);
+    public void take(int requestedQuantity) throws InsulineAvailabilityException {
+        int updatedAmount = this.amount - requestedQuantity;
+        if(updatedAmount < 0){
+            int amountTaken = this.amount;
+            int requiredAmount = abs(updatedAmount);
+            this.amount = 0; // empty
+            throw new InsulineAvailabilityException(amountTaken, requiredAmount);
         }
-        return requestedQuantity;
+        else{
+            this.amount = updatedAmount;
+        }
     }
 
     public void add(int addedQuantity){

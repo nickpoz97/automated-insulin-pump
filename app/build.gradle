@@ -28,3 +28,7 @@ application {
     // Define the main class for the application.
     mainClass = 'it.univr.App'
 }
+
+run{
+    standardInput = System.in
+}

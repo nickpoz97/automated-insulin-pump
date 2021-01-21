@@ -26,6 +26,7 @@ public class InputHandlerTests {
         inputHandler = new InputHandler(bloodModel, insulineReservoir);
         // delete output
         System.setOut(new PrintStream(OutputStream.nullOutputStream()));
+        // backup input stream
     }
 
     @Test

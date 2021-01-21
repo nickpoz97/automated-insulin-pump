@@ -5,7 +5,6 @@ package it.univr;
 
 import it.univr.bloodModels.BloodModel;
 import it.univr.bloodModels.InteractiveBloodModel;
-import it.univr.exceptions.LethalSugarValuesException;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;

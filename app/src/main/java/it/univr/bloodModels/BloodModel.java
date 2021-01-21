@@ -1,7 +1,5 @@
 package it.univr.bloodModels;
 
-import it.univr.exceptions.LethalSugarValuesException;
-
 import static java.lang.Math.max;
 
 public abstract class BloodModel {
@@ -15,11 +13,10 @@ public abstract class BloodModel {
     private int incrementRate;
     private int time = 0;
 
-    public BloodModel(int baseSugarLevel, int incrementRate) throws LethalSugarValuesException {
+    public BloodModel(int baseSugarLevel, int incrementRate) {
         this.baseSugarLevel = baseSugarLevel;
         this.actualSugarLevel = baseSugarLevel;
         this.incrementRate = incrementRate;
-        this.checkSugarValuesConsistency();
     }
 
     public BloodModel(){
@@ -30,16 +27,10 @@ public abstract class BloodModel {
         return baseSugarLevel;
     }
 
-    private void checkSugarValuesConsistency() throws LethalSugarValuesException {
-        if(this.actualSugarLevel < minSugar || this.actualSugarLevel > maxSugar){
-            throw new LethalSugarValuesException(minSugar, maxSugar,this.actualSugarLevel);
-        }
-    }
-
-    protected void updateSugarLevel() throws LethalSugarValuesException { // time independent and call number dependent
+    protected void updateSugarLevel() { // time independent and call number dependent
         this.time++;
-        this.actualSugarLevel = this.baseSugarLevel + this.incrementRate * this.time;
-        this.checkSugarValuesConsistency();
+        // no below zero values allowed
+        this.actualSugarLevel = max(0, this.baseSugarLevel + this.incrementRate * this.time);
     }
 
     // only used for testing
@@ -64,7 +55,7 @@ public abstract class BloodModel {
     }
 
     // different implementations
-    public abstract int retrieveSugarLevel() throws LethalSugarValuesException;
+    public abstract int retrieveSugarLevel();
 
     // only for testing purpose
     public static int getMaxSugar() {
