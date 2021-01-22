@@ -35,7 +35,6 @@ Sugar control can be done only if there is enough insulin in the reservoir.
 		1. obtains remaining insulin with *Pump* device
 	* the difference between actual and former sugar level is saved in the attribute *increment* that represents the increment rate **ir**
 	* method *addDisplay()* adds a new display
-
 * Display
 	* interface for a display device that interprets data given by the *Controller* and prints it
 	* it support a queue for additional messages to print and a clock
@@ -49,6 +48,8 @@ Sugar control can be done only if there is enough insulin in the reservoir.
 	* interface for a device connected with reservoir, *Controller* and blood that injects insulin or informs about the remaining quantity
 * SugarSensor
 	*  interface for a device connected with *Controller* and blood that informs about *actualSugarLevel* using the method *retrieveSugarLevel* from *BloodData*
+* AutomatedInsulinPump
+	* wrapper instances the system and executes an infinite loop
 
 ## Quality Assurance
 ### Test Selection

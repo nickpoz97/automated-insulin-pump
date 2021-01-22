@@ -140,9 +140,9 @@ public class Controller {
         }
         catch (InsulinAvailabilityException e){
             for (Display display : displays){
-                int requiredAmount = e.getRequiredAmount() + 20;
-                display.addInfo("You need to fill the reservoir by " + requiredAmount + " units" +
-                        "sto stop rising level");
+                display.addInfo("You need to fill the reservoir by almost "
+                        + e.getRequiredAmount() +
+                        " units to stop rising sugar level");
             }
         }
     }
