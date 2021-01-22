@@ -1,11 +1,10 @@
 package it.univr.bloodModels;
 
+import it.univr.systemComponents.Controller;
+
 import static java.lang.Math.max;
 
 public abstract class BloodModel {
-    // boundaries
-    private static final int maxSugar = 200;
-    private static final int minSugar = 50;
 
     // dinamic data
     private int baseSugarLevel;
@@ -20,7 +19,7 @@ public abstract class BloodModel {
     }
 
     public BloodModel(){
-        this((maxSugar + minSugar)/2, 0);
+        this((Controller.getLowerSugarBound()+Controller.getUpperSugarBound())/2, 0);
     }
 
     public int getBaseSugarLevel() {
@@ -41,7 +40,7 @@ public abstract class BloodModel {
     // injected insulin decreases increment rate
     public void injectInsulin(int amount){
         reset();
-        this.incrementRate -= amount;
+        this.incrementRate -= max(0,amount);
     }
 
     public void addSugar(int amount) {
@@ -56,15 +55,6 @@ public abstract class BloodModel {
 
     // different implementations
     public abstract int retrieveSugarLevel();
-
-    // only for testing purpose
-    public static int getMaxSugar() {
-        return maxSugar;
-    }
-
-    public static int getMinSugar() {
-        return minSugar;
-    }
 
     public int getIncrementRate() {
         return incrementRate;

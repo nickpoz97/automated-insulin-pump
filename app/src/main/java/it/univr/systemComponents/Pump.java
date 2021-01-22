@@ -1,31 +1,31 @@
 package it.univr.systemComponents;
 
 import it.univr.bloodModels.BloodModel;
-import it.univr.exceptions.InsulineAvailabilityException;
+import it.univr.exceptions.InsulinAvailabilityException;
 
 import static java.lang.Math.max;
 
 public class Pump {
-    private final InsulineReservoir insulineReservoir;
+    private final InsulinReservoir insulinReservoir;
     private final BloodModel bloodModel;
 
-    public Pump(InsulineReservoir insulineReservoir, BloodModel bloodModel){
-        this.insulineReservoir = insulineReservoir;
+    public Pump(InsulinReservoir insulinReservoir, BloodModel bloodModel){
+        this.insulinReservoir = insulinReservoir;
         this.bloodModel = bloodModel;
     }
 
-    public void injectInsulin(int quantity) throws InsulineAvailabilityException{
+    public void injectInsulin(int quantity) throws InsulinAvailabilityException {
         try {
-            insulineReservoir.take(max(0, quantity));
+            insulinReservoir.take(max(0, quantity));
             bloodModel.injectInsulin(quantity);
         }
-        catch (InsulineAvailabilityException e){
+        catch (InsulinAvailabilityException e){
             bloodModel.injectInsulin(e.getAmountTaken());
             throw e;
         }
     }
 
     public int getAvailableInsulin(){
-        return insulineReservoir.getAmount();
+        return insulinReservoir.getAmount();
     }
 }

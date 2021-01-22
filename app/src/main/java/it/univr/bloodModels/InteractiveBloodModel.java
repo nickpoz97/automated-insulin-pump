@@ -2,7 +2,7 @@ package it.univr.bloodModels;
 
 public class InteractiveBloodModel extends BloodModel {
 
-    private int count;
+    private long count;
 
     public InteractiveBloodModel(int actualSugarLevel, int incrementRate) {
         super(actualSugarLevel, incrementRate);

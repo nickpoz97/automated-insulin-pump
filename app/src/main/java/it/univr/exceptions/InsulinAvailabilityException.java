@@ -1,10 +1,10 @@
 package it.univr.exceptions;
 
-public class InsulineAvailabilityException extends Exception{
+public class InsulinAvailabilityException extends Exception{
     private int requiredAmount;
     private int amountTaken;
 
-    public InsulineAvailabilityException(int amountTaken, int requiredAmount){
+    public InsulinAvailabilityException(int amountTaken, int requiredAmount){
         super("Insuline request exceeding actual value");
 
         this.amountTaken = amountTaken;

@@ -8,15 +8,17 @@ import java.util.Queue;
 
 public class Display {
     private Queue<String> infoQueue;
+    private static Calendar calendar = null;
 
     public Display(){
+        if(calendar == null){
+            calendar = Calendar.getInstance();
+        }
         infoQueue = new LinkedList<>();
     }
 
     public void printData(int sugar, int remainingInsulin, SugarStates sugarStatus, InsulinStates insulinStatus){
-        Calendar calendar = Calendar.getInstance();
         String statusMessage = interpretStatus(sugarStatus, insulinStatus);
-
         System.out.println();
         System.out.format("Date: %td/%tm/%tY %tT\n", calendar,calendar,calendar,calendar);
         System.out.println("Sugar level: " + sugar);
@@ -24,6 +26,7 @@ public class Display {
         System.out.println(statusMessage);
         this.printInfos();
         System.out.println();
+        calendar.add(Calendar.HOUR_OF_DAY, 1);
     }
 
     private String interpretStatus(SugarStates sugarStatus, InsulinStates insulinStatus) {

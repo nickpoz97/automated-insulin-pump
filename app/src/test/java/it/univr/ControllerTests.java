@@ -15,10 +15,10 @@ public class ControllerTests {
 
     @Before
     public void instantiate(){
-        InsulineReservoir insulineReservoir = new InsulineReservoir();
+        InsulinReservoir insulinReservoir = new InsulinReservoir();
         this.bloodModel = new InteractiveBloodModel();
         SugarSensor sugarSensor = new SugarSensor(bloodModel);
-        Pump pump = new Pump(insulineReservoir, bloodModel);
+        Pump pump = new Pump(insulinReservoir, bloodModel);
         Display display = new Display();
         this.controller = new Controller(pump, display, sugarSensor);
     }

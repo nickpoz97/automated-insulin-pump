@@ -9,15 +9,15 @@ import it.univr.systemComponents.Display;
 public class AutomatedInsulinPump {
     private Controller controller;
     private BloodModel bloodModel;
-    private final InsulineReservoir insulineReservoir;
+    private final InsulinReservoir insulinReservoir;
     private final boolean testingMode;
 
     public AutomatedInsulinPump(int sugarLevel, int incrementRate, int insulinAmount, boolean testingMode){
         this.testingMode = testingMode;
-        this.insulineReservoir = new InsulineReservoir(insulinAmount);
+        this.insulinReservoir = new InsulinReservoir(insulinAmount);
         instantiateBloodModel(sugarLevel, incrementRate);
         SugarSensor sugarSensor = new SugarSensor(bloodModel);
-        Pump pump = new Pump(insulineReservoir, bloodModel);
+        Pump pump = new Pump(insulinReservoir, bloodModel);
         Display display = new Display();
         instantiateController(pump, display, sugarSensor);
     }
@@ -30,7 +30,7 @@ public class AutomatedInsulinPump {
 
     private void instantiateController(Pump pump, Display display, SugarSensor sugarSensor){
         if(testingMode){
-            InputHandler inputHandler = new InputHandler(bloodModel, insulineReservoir);
+            InputHandler inputHandler = new InputHandler(bloodModel, insulinReservoir);
             this.controller = new Controller(pump,display,sugarSensor,inputHandler);
         }
     }

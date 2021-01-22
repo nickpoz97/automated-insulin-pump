@@ -8,12 +8,12 @@ import static java.lang.System.exit;
 
 public class InputHandler {
     private final BloodModel bloodModel;
-    private final InsulineReservoir insulineReservoir;
+    private final InsulinReservoir insulinReservoir;
     private static final Scanner keyboard = new Scanner(System.in);
 
-    public InputHandler(BloodModel bloodModel, InsulineReservoir insulineReservoir){
+    public InputHandler(BloodModel bloodModel, InsulinReservoir insulinReservoir){
         this.bloodModel = bloodModel;
-        this.insulineReservoir = insulineReservoir;
+        this.insulinReservoir = insulinReservoir;
     }
 
     public void processInput() {
@@ -52,7 +52,7 @@ public class InputHandler {
         catch (NumberFormatException e){
             value = 0;
         }
-        insulineReservoir.add(value);
+        insulinReservoir.add(value);
     }
 
     private void processSugarAddition(Scanner keyboard) {

@@ -3,7 +3,7 @@ package it.univr;
 import it.univr.bloodModels.BloodModel;
 import it.univr.bloodModels.InteractiveBloodModel;
 import it.univr.systemComponents.InputHandler;
-import it.univr.systemComponents.InsulineReservoir;
+import it.univr.systemComponents.InsulinReservoir;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,14 +16,14 @@ import static org.junit.Assert.assertEquals;
 
 public class InputHandlerTests {
     private BloodModel bloodModel;
-    private InsulineReservoir insulineReservoir;
+    private InsulinReservoir insulinReservoir;
     private InputHandler inputHandler;
 
     @Before
     public void initilization(){
         bloodModel = new InteractiveBloodModel();
-        insulineReservoir = new InsulineReservoir(100);
-        inputHandler = new InputHandler(bloodModel, insulineReservoir);
+        insulinReservoir = new InsulinReservoir(100);
+        inputHandler = new InputHandler(bloodModel, insulinReservoir);
         // delete output
         System.setOut(new PrintStream(OutputStream.nullOutputStream()));
         // backup input stream
@@ -31,12 +31,12 @@ public class InputHandlerTests {
 
     @Test
     public void testAddInsulin() {
-        int formerAmount = insulineReservoir.getAmount();
+        int formerAmount = insulinReservoir.getAmount();
         // +100 insulin
         this.setStdInput("i\n100\nc\n");
         inputHandler.processInput();
-        int actualAmount = Math.min(formerAmount + 100, InsulineReservoir.getCapacity()) ;
-        assertEquals(actualAmount, insulineReservoir.getAmount());
+        int actualAmount = Math.min(formerAmount + 100, InsulinReservoir.getCapacity()) ;
+        assertEquals(actualAmount, insulinReservoir.getAmount());
     }
 
     @Test
@@ -52,14 +52,14 @@ public class InputHandlerTests {
     @Test
     public void testAddBoth(){
         int formerBlood = bloodModel.getIncrementRate();
-        int formerInsulin = insulineReservoir.getAmount();
+        int formerInsulin = insulinReservoir.getAmount();
         // +8 sugar, +30 insulin, '0' sugar, '0' insulin
         this.setStdInput("s\n8\ni\n30\ns\n-4\ni\n-6\nc\n");
         inputHandler.processInput();
         int actualBlood = formerBlood+8;
-        int actualInsulin = Math.min(formerInsulin + 30, InsulineReservoir.getCapacity()) ;
+        int actualInsulin = Math.min(formerInsulin + 30, InsulinReservoir.getCapacity()) ;
         assertEquals(actualBlood, bloodModel.getIncrementRate());
-        assertEquals(actualInsulin, insulineReservoir.getAmount());
+        assertEquals(actualInsulin, insulinReservoir.getAmount());
     }
 
     private void setStdInput(String inputString){
