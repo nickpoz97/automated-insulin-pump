@@ -18,14 +18,16 @@ public class InputHandler {
 
     public void processInput() {
         String choice = "_"; // ! c
+        boolean sChosen = false;
 
         while (!choice.equals("c")) {
             printChoices();
             choice = keyboard.nextLine();
             if (choice.equals("i")) {
-                processReservoirFilling(keyboard);
+                processReservoirFilling();
             } else if (choice.equals("s")) {
-                processSugarAddition(keyboard);
+                processSugarAddition(sChosen);
+                sChosen = true;
             } else if (choice.equals("e")) {
                 keyboard.close();
                 exit(0);
@@ -42,7 +44,7 @@ public class InputHandler {
         System.out.print("Your choice: ");
     }
 
-    private void processReservoirFilling(Scanner keyboard) {
+    private void processReservoirFilling() {
         System.out.print("Insert insulin amount (negative values are equal to 0): ");
         int value;
         try {
@@ -55,12 +57,19 @@ public class InputHandler {
         insulinReservoir.add(value);
     }
 
-    private void processSugarAddition(Scanner keyboard) {
-        System.out.print("Insert sugar amount (negative values are equal to 0): ");
+    private void processSugarAddition(boolean alreadyChosen) {
+        if(alreadyChosen){
+            System.out.println("This option cannot be chosen more 2 than times in a row");
+            return;
+        }
+
+        System.out.println("Insert sugar amount");
+        System.out.print("negative values are equal to 0 and max allowed value is 20: ");
         int value;
         try {
             value = Integer.parseInt(keyboard.nextLine());
             value = Math.max(value, 0);
+            value = Math.min(value, 20);
         }
         catch (NumberFormatException e){
             value = 0;

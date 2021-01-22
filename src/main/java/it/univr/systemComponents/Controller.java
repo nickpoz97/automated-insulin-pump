@@ -11,10 +11,10 @@ import static java.lang.Math.max;
 
 public class Controller {
     private static final int lowerSugarBound = 80;
-    private static final int upperSugarBound = 180;
-    private static final int lowerInsulinBound = 20;
+    private static final int upperSugarBound = 140;
     private static final int veryHighSugarLevel = 200;
     private static final int veryLowSugarLevel = 20;
+    private static final int lowerInsulinBound = 50;
 
     private final Pump pump;
     private final List<Display> displays = new ArrayList<>(2);
@@ -108,7 +108,7 @@ public class Controller {
     }
 
     private void regulateSugar(){
-        int littleAddition = 2;
+        int littleAddition = 1;
         int hugeAddition = 10;
 
         int quantity = max(0, increment);

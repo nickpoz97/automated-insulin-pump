@@ -26,7 +26,7 @@ public class Display {
         System.out.println(statusMessage);
         this.printInfos();
         System.out.println();
-        calendar.add(Calendar.HOUR_OF_DAY, 1);
+        calendar.add(Calendar.MINUTE, 10);
     }
 
     private String interpretStatus(SugarStates sugarStatus, InsulinStates insulinStatus) {

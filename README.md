@@ -4,7 +4,31 @@ High level implementation of an automated insulin pump written in Java with simu
 The software needs to monitor blood status through sensors and inform user with values and messages printed on a display.
 It must also lower sugar value if it rises quickly or if it is high.
 Sugar control can be done only if there is enough insulin in the reservoir.
+
 ## Scenarios
+### Starting from a good and stable state, user consumes food with sugar
+* Initial Hypothesis
+	* sugar is at a good level and is stable, insuline level in reservoir is good
+* Normal Flow
+	* sugar raises and the controller uses the pump to inject insuline and to lock sugar rising
+* Bad Situation
+	* sugar level raises at a level above safe bound so it is injected more insulin to lower it. After some minutes sugar level should return to a good state and continues to go down slowly
+* Ending
+	* Insulin amount is lower than the amount at the beginning
+	* Display may inform that insulin is under a certain bound if it is the case
+
+### Starting from a low sugar level, user consumes food with sugar
+* Initial Hypothesis
+	* sugar is low, so the user consumes something containing sugar
+* Normal Flow
+	* sugar starts rising and after some minutes sugar level is in a good stare
+* Bad Situation 1
+	* user hasn' t taken enough sugar and sugar level is stable goes down anyway
+* Bad situation 2
+	* user has taken too much sugar and level raises very quickly
+* Ending
+	* Display should indicate to user the status
+
 ## General Design
 * This software is designed to be an abstraction of a real time embedded system that runs in polling mode with an infinite loop.
 * Since it runs on a general purpose operating sysem, it doesn' t rely on time, but instead it is designed to be executed on a simulated environment where blood is an object that represents an *abstract model* of real blood.
@@ -18,11 +42,12 @@ Sugar control can be done only if there is enough insulin in the reservoir.
 	* Abstract blood trend is like a linear function **as = bs + t \* ir**
 		* **as** is actual sugar level (**as = f(bs, t, ir)**)
 		* **bs** is base sugar level (every time sugar or insulin is added it is updated to the last **as**)
-		* **t** is time (*1 unit = 1 theoretical hour*) since last sugar/insulin addition
+		* **t** is time (*1 unit = 10 theoretical minutes*) since last sugar/insulin addition
 		* **ir** is increment rate (raised/lowered by 1 for each unit of sugar/insulin addition)
 	* there is an update method that raises **t** by 1 and updates **as** according to actual values
 * InteractiveBloodModel
 	* implements abstract method *retrieveSugarLevel* of *BloodModel* by updating **as** and returning it
+	* this model doesn' t consider sugar consumption by human body 
 * Controller
 	* class that manages sensors and devices to monitor blood and reservoir status and uses displays to inform user
 	* contructor connects components and initilizes blood/insulin status
