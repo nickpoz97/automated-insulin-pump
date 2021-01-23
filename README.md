@@ -4,9 +4,9 @@ High level implementation of an automated insulin pump written in Java with simu
 * The software needs to monitor blood status through sensors and inform user with values and messages printed on a display.
 * It must also lower sugar value if it rises or if it is high.
 * Sugar control can be done only if there is enough insulin in the reservoir.
-* Blood is abstracted with a mathematical model
 
 ## Scenarios
+
 ### Starting from a good and stable state, user consumes food with sugar
 * Initial Hypothesis
 	* sugar is at a good level and is stable, insuline level in reservoir is good
@@ -20,19 +20,26 @@ High level implementation of an automated insulin pump written in Java with simu
 
 ### Starting from a low sugar level, user consumes food with sugar
 * Initial Hypothesis
-	* sugar is low, so the user consumes something containing sugar
+	* sugar is below a certain bound (but not in a dangerous state), so the user consumes something containing sugar
 * Normal Flow
-	* sugar starts rising and after some minutes sugar level is in a good stare
+	* sugar starts rising and after some minutes sugar level is in a good state
 * Bad Situation 1
-	* user hasn' t taken enough sugar and sugar level is stable goes down anyway
+	* user hasn' t taken enough sugar and sugar level doesn' to go up
 * Bad situation 2
 	* user has taken too much sugar and level raises very quickly
 * Ending
 	* Display should indicate to user the status
 
+### Starting from a low sugar level, user ignores display
+* sugar is below a certain bound (but not in a dangerous state), but the user ignores the information
+* Normal flow 1
+	* sugar level is table and lower than 
+* Normal flow 2
+	* sugar level 
+
 ### Sugar level is dangerously high (hyperglycemia)
 * Initial hypothesis
-	* sugar level is very high
+	* sugar level is very high (display emphasizes this)
 * Normal flow
 	* controller uses pump to inject enough insulin so it stops sugar rising and quickly lowers sugar level
 * Bad Situation
@@ -41,12 +48,30 @@ High level implementation of an automated insulin pump written in Java with simu
 * Ending
 	* Display should indicate that sugar level is going down
 
+### Sugar level is dangerously low (hypoglycemia)
+* Initial hypothesis
+	* sugar level is very low (display emphasizes that)
+* Normal flow
+	* user consumes some sugar 
+
 ## General Design
 * This software is designed to be an abstraction of a real time embedded system that runs in polling mode with an infinite loop.
 * Since it runs on a general purpose operating sysem, it doesn' t rely on time, but instead it is designed to be executed on a simulated environment where blood is an object that represents an *abstract model* of real blood.
-* The controller interacts with sensors interfaces (which may be implemented by a sensor driver) and each of them interacts with the blood model.
+* Blood is abstracted with a mathematical model
+* The controller interacts with sensors interfaces (which may be implemented by a sensor driver) and each of them interacts with the blood model
 * There is a module described by a class called *InputHandler* that simulates eating food with sugar and insulin reservoir filling.
-* Insulin and added sugar are expressed in units
+* Insulin and added sugar level are expressed in units
+* Sugar status in blood depends on 4 boundaries (each value is expressed in units like sugar level and insulin)
+
+| status          | condition 										 |
+| --------------- | -----------------------------------------------  |
+| VERY_LOW_SUGAR  | sugar < HYPOGLYCEMIA_BOUND						 |
+| LOW_SUGAR       | HYPOGLYCEMIA_BOUND <= sugar < LOWER_SUGAR_BOUND  |
+| GOOD            | LOWER_SUGAR_BOUND <= sugar <= UPPER_SUGAR_BOUND  |
+| HIGH_SUGAR      | HYPERGLYCEMIA_BOUND >= sugar > UPPER_SUGAR_BOUND |
+| VERY_HIGH_SUGAR | sugar > HYPERGLYCEMIA_BOUND						 |
+
+* Insulin reserve is low when the amount in the reservoir is below *LOWER_INSULIN_BOUND*
 
 ## Classes Description
 * BloodModel

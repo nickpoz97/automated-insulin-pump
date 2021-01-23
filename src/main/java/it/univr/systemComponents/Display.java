@@ -39,7 +39,7 @@ public class Display {
     }
 
     private String interpretInsulinStatus(InsulinStates insulinStatus) {
-        if(insulinStatus == InsulinStates.LOWRESERVE){
+        if(insulinStatus == InsulinStates.LOW_RESERVE){
             return "WARNING! Low remaining insulin";
         }
         else if(insulinStatus == InsulinStates.EMPTY){
@@ -51,16 +51,16 @@ public class Display {
     }
 
     private String interpretSugarStatus(SugarStates sugarStatus) {
-        if(sugarStatus == SugarStates.LOWSUGAR){
+        if(sugarStatus == SugarStates.LOW_SUGAR){
             return "WARNING! low sugar level";
         }
-        else if(sugarStatus == SugarStates.HIGHSUGAR){
+        else if(sugarStatus == SugarStates.HIGH_SUGAR){
             return "WARNING! high sugar level";
         }
-        else if(sugarStatus == SugarStates.VERYHIGHSUGAR){
+        else if(sugarStatus == SugarStates.VERY_HIGH_SUGAR){
             return "DANGER! sugar level is lethally high! You have eaten too much sugar or no insuline available";
         }
-        else if(sugarStatus == SugarStates.VERYLOWSUGAR){
+        else if(sugarStatus == SugarStates.VERY_LOW_SUGAR){
             return "DANGER! sugar level is lethally low! Eat something with sugar";
         }
         else {

@@ -13,8 +13,8 @@ public class Controller {
     // bounds
     private static final int LOWER_SUGAR_BOUND = 60;
     private static final int UPPER_SUGAR_BOUND = 100;
-    private static final int VERY_HIGH_SUGAR_LEVEL = 130;
-    private static final int VERY_LOW_SUGAR_LEVEL = 20;
+    private static final int HYPERGLYCEMIA_BOUND = 130;
+    private static final int HYPOGLYCEMIA_BOUND = 20;
     private static final int LOWER_INSULIN_BOUND = 60;
 
     // constants used to lower sugar level
@@ -64,7 +64,7 @@ public class Controller {
         }
         updateSugarMeasurements();
         checkSugarStatus();
-        if(sugarState != SugarStates.LOWSUGAR && sugarState != SugarStates.VERYLOWSUGAR) {
+        if(sugarState != SugarStates.LOW_SUGAR && sugarState != SugarStates.VERY_LOW_SUGAR) {
             regulateSugar();
         }
         checkInsulinStatus();
@@ -77,17 +77,17 @@ public class Controller {
     }
 
     private void checkSugarStatus() {
-        if(this.lastMeasurement < VERY_LOW_SUGAR_LEVEL){
-            sugarState = SugarStates.VERYLOWSUGAR;
+        if(this.lastMeasurement < HYPOGLYCEMIA_BOUND){
+            sugarState = SugarStates.VERY_LOW_SUGAR;
         }
         else if (this.lastMeasurement < LOWER_SUGAR_BOUND){
-            sugarState = SugarStates.LOWSUGAR;
+            sugarState = SugarStates.LOW_SUGAR;
         }
-        else if (this.lastMeasurement > VERY_HIGH_SUGAR_LEVEL){
-            sugarState = SugarStates.VERYHIGHSUGAR;
+        else if (this.lastMeasurement > HYPERGLYCEMIA_BOUND){
+            sugarState = SugarStates.VERY_HIGH_SUGAR;
         }
         else if (this.lastMeasurement > UPPER_SUGAR_BOUND){
-            sugarState = SugarStates.HIGHSUGAR;
+            sugarState = SugarStates.HIGH_SUGAR;
         }
         else{
             sugarState = SugarStates.GOOD;
@@ -115,10 +115,10 @@ public class Controller {
 
     private void regulateSugar(){
         int quantity = max(0, increment);
-        if (sugarState == SugarStates.HIGHSUGAR) {
+        if (sugarState == SugarStates.HIGH_SUGAR) {
             quantity += LITTLE_ADDITION;
         }
-        else if (sugarState == SugarStates.VERYHIGHSUGAR && increment >= 0){
+        else if (sugarState == SugarStates.VERY_HIGH_SUGAR && increment >= 0){
             quantity += HUGE_ADDITION;
         }
         insulinInjection(quantity);
@@ -130,7 +130,7 @@ public class Controller {
             insulinState = InsulinStates.EMPTY;
         }
         else if(remainingInsulin < LOWER_INSULIN_BOUND){
-            insulinState = InsulinStates.LOWRESERVE;
+            insulinState = InsulinStates.LOW_RESERVE;
         }
         else {
             insulinState = InsulinStates.GOOD;
