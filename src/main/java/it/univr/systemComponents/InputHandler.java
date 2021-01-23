@@ -10,6 +10,7 @@ public class InputHandler {
     private final BloodModel bloodModel;
     private final InsulinReservoir insulinReservoir;
     private static final Scanner keyboard = new Scanner(System.in);
+    private static final int maxSugarAddition = Controller.getLowerInsulinBound() - 10;
 
     public InputHandler(BloodModel bloodModel, InsulinReservoir insulinReservoir){
         this.bloodModel = bloodModel;
@@ -64,12 +65,12 @@ public class InputHandler {
         }
 
         System.out.println("Insert sugar amount");
-        System.out.print("negative values are equal to 0 and max allowed value is 20: ");
+        System.out.print("negative values are equal to 0 and max allowed value is " + maxSugarAddition + ": ");
         int value;
         try {
             value = Integer.parseInt(keyboard.nextLine());
             value = Math.max(value, 0);
-            value = Math.min(value, 20);
+            value = Math.min(value, maxSugarAddition);
         }
         catch (NumberFormatException e){
             value = 0;

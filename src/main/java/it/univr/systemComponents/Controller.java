@@ -10,22 +10,28 @@ import java.util.List;
 import static java.lang.Math.max;
 
 public class Controller {
-    private static final int lowerSugarBound = 80;
-    private static final int upperSugarBound = 140;
-    private static final int veryHighSugarLevel = 200;
-    private static final int veryLowSugarLevel = 20;
-    private static final int lowerInsulinBound = 50;
+    // bounds
+    private static final int LOWER_SUGAR_BOUND = 60;
+    private static final int UPPER_SUGAR_BOUND = 100;
+    private static final int VERY_HIGH_SUGAR_LEVEL = 130;
+    private static final int VERY_LOW_SUGAR_LEVEL = 20;
+    private static final int LOWER_INSULIN_BOUND = 60;
 
+    // constants used to lower sugar level
+    private static final int LITTLE_ADDITION = 1;
+    private static final int HUGE_ADDITION = 10;
+
+    // sensor interfaces
     private final Pump pump;
     private final List<Display> displays = new ArrayList<>(2);
     private final SugarSensor sugarSensor;
 
-    private SugarStates sugarState;
-    private InsulinStates insulinState;
-
+    // status
     private int remainingInsulin;
     private int lastMeasurement;
     private int increment;
+    private SugarStates sugarState;
+    private InsulinStates insulinState;
 
     private InputHandler inputHandler = null;
 
@@ -71,16 +77,16 @@ public class Controller {
     }
 
     private void checkSugarStatus() {
-        if(this.lastMeasurement < veryLowSugarLevel){
+        if(this.lastMeasurement < VERY_LOW_SUGAR_LEVEL){
             sugarState = SugarStates.VERYLOWSUGAR;
         }
-        else if (this.lastMeasurement < lowerSugarBound){
+        else if (this.lastMeasurement < LOWER_SUGAR_BOUND){
             sugarState = SugarStates.LOWSUGAR;
         }
-        else if (this.lastMeasurement > veryHighSugarLevel){
+        else if (this.lastMeasurement > VERY_HIGH_SUGAR_LEVEL){
             sugarState = SugarStates.VERYHIGHSUGAR;
         }
-        else if (this.lastMeasurement > upperSugarBound){
+        else if (this.lastMeasurement > UPPER_SUGAR_BOUND){
             sugarState = SugarStates.HIGHSUGAR;
         }
         else{
@@ -108,15 +114,12 @@ public class Controller {
     }
 
     private void regulateSugar(){
-        int littleAddition = 1;
-        int hugeAddition = 10;
-
         int quantity = max(0, increment);
         if (sugarState == SugarStates.HIGHSUGAR) {
-            quantity += littleAddition;
+            quantity += LITTLE_ADDITION;
         }
         else if (sugarState == SugarStates.VERYHIGHSUGAR && increment >= 0){
-            quantity += hugeAddition;
+            quantity += HUGE_ADDITION;
         }
         insulinInjection(quantity);
     }
@@ -126,7 +129,7 @@ public class Controller {
         if(remainingInsulin == 0){
             insulinState = InsulinStates.EMPTY;
         }
-        else if(remainingInsulin < lowerInsulinBound){
+        else if(remainingInsulin < LOWER_INSULIN_BOUND){
             insulinState = InsulinStates.LOWRESERVE;
         }
         else {
@@ -148,10 +151,12 @@ public class Controller {
     }
 
     public static int getLowerSugarBound() {
-        return lowerSugarBound;
+        return LOWER_SUGAR_BOUND;
     }
 
     public static int getUpperSugarBound() {
-        return upperSugarBound;
+        return UPPER_SUGAR_BOUND;
     }
+
+    public static int getLowerInsulinBound(){ return LOWER_INSULIN_BOUND; }
 }

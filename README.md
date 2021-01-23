@@ -1,9 +1,10 @@
 # automated-insulin-pump
 High level implementation of an automated insulin pump written in Java with simulated blood.
 ## Requirements
-The software needs to monitor blood status through sensors and inform user with values and messages printed on a display.
-It must also lower sugar value if it rises quickly or if it is high.
-Sugar control can be done only if there is enough insulin in the reservoir.
+* The software needs to monitor blood status through sensors and inform user with values and messages printed on a display.
+* It must also lower sugar value if it rises or if it is high.
+* Sugar control can be done only if there is enough insulin in the reservoir.
+* Blood is abstracted with a mathematical model
 
 ## Scenarios
 ### Starting from a good and stable state, user consumes food with sugar
@@ -29,6 +30,17 @@ Sugar control can be done only if there is enough insulin in the reservoir.
 * Ending
 	* Display should indicate to user the status
 
+### Sugar level is dangerously high (hyperglycemia)
+* Initial hypothesis
+	* sugar level is very high
+* Normal flow
+	* controller uses pump to inject enough insulin so it stops sugar rising and quickly lowers sugar level
+* Bad Situation
+	* there is not enough insulin, so user must fill the reservoir with at least the amount indicated
+	* once reservoir is refilled, everything should return to normal flow
+* Ending
+	* Display should indicate that sugar level is going down
+
 ## General Design
 * This software is designed to be an abstraction of a real time embedded system that runs in polling mode with an infinite loop.
 * Since it runs on a general purpose operating sysem, it doesn' t rely on time, but instead it is designed to be executed on a simulated environment where blood is an object that represents an *abstract model* of real blood.
@@ -42,7 +54,7 @@ Sugar control can be done only if there is enough insulin in the reservoir.
 	* Abstract blood trend is like a linear function **as = bs + t \* ir**
 		* **as** is actual sugar level (**as = f(bs, t, ir)**)
 		* **bs** is base sugar level (every time sugar or insulin is added it is updated to the last **as**)
-		* **t** is time (*1 unit = 10 theoretical minutes*) since last sugar/insulin addition
+		* **t** is time (*1 unit <=> 10 minutes*) since last sugar/insulin addition
 		* **ir** is increment rate (raised/lowered by 1 for each unit of sugar/insulin addition)
 	* there is an update method that raises **t** by 1 and updates **as** according to actual values
 * InteractiveBloodModel
@@ -65,6 +77,9 @@ Sugar control can be done only if there is enough insulin in the reservoir.
 	* it support a queue for additional messages to print and a clock
 * InputHandler
 	* component that simulates sugar in food eating and insuline reservoir filling
+	* sugar addition value indicates an abstraction about sugar in food
+		* higher values mean simple sugar (sucrose, glucose, ...) in an high amount
+		* highest possible value is an abstraction of max amount of sugar that a person can take, to leave out absurd values like 50k (it is connected with constant *Controller.LOWER_INSULIN_BOUND* since this constant should indicate the minimun amount of insulin to always ensure that sugar level doesn' t rise up or stay high)
 * InsulineReservoir
 	* abstraction of a limited reservoir
 	* exceeding values are truncated by capacity
