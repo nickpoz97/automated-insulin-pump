@@ -5,6 +5,25 @@ High level implementation of an automated insulin pump written in Java with simu
 * It must also lower sugar value if it rises or if it is high.
 * Sugar control can be done only if there is enough insulin in the reservoir.
 
+## General Design
+* This software is designed to be an abstraction of a real time embedded system that runs in polling mode with an infinite loop.
+* Since it runs on a general purpose operating sysem, it doesn' t rely on time, but instead it is designed to be executed on a simulated environment where blood is an object that represents an *abstract model* of real blood.
+* Blood is abstracted with a mathematical model
+* The controller interacts with sensors interfaces (which may be implemented by a sensor driver) and each of them interacts with the blood model
+* There is a module described by a class called *InputHandler* that simulates eating food with sugar and insulin reservoir filling.
+* Insulin and added sugar level are expressed in units
+* Sugar status in blood depends on 4 boundaries (each value is expressed in units like sugar level and insulin)
+
+| status          | condition 										 |
+| --------------- | -----------------------------------------------  |
+| VERY_LOW_SUGAR  | sugar < HYPOGLYCEMIA_BOUND						 |
+| LOW_SUGAR       | HYPOGLYCEMIA_BOUND <= sugar < LOWER_SUGAR_BOUND  |
+| GOOD            | LOWER_SUGAR_BOUND <= sugar <= UPPER_SUGAR_BOUND  |
+| HIGH_SUGAR      | HYPERGLYCEMIA_BOUND >= sugar > UPPER_SUGAR_BOUND |
+| VERY_HIGH_SUGAR | sugar > HYPERGLYCEMIA_BOUND						 |
+
+* Insulin reserve is low when the amount in the reservoir is below *LOWER_INSULIN_BOUND*
+
 ## Scenarios
 
 ### Starting from a good and stable state, user consumes food with sugar
@@ -53,25 +72,6 @@ High level implementation of an automated insulin pump written in Java with simu
 	* sugar level is very low (display emphasizes that)
 * Normal flow
 	* user consumes some sugar 
-
-## General Design
-* This software is designed to be an abstraction of a real time embedded system that runs in polling mode with an infinite loop.
-* Since it runs on a general purpose operating sysem, it doesn' t rely on time, but instead it is designed to be executed on a simulated environment where blood is an object that represents an *abstract model* of real blood.
-* Blood is abstracted with a mathematical model
-* The controller interacts with sensors interfaces (which may be implemented by a sensor driver) and each of them interacts with the blood model
-* There is a module described by a class called *InputHandler* that simulates eating food with sugar and insulin reservoir filling.
-* Insulin and added sugar level are expressed in units
-* Sugar status in blood depends on 4 boundaries (each value is expressed in units like sugar level and insulin)
-
-| status          | condition 										 |
-| --------------- | -----------------------------------------------  |
-| VERY_LOW_SUGAR  | sugar < HYPOGLYCEMIA_BOUND						 |
-| LOW_SUGAR       | HYPOGLYCEMIA_BOUND <= sugar < LOWER_SUGAR_BOUND  |
-| GOOD            | LOWER_SUGAR_BOUND <= sugar <= UPPER_SUGAR_BOUND  |
-| HIGH_SUGAR      | HYPERGLYCEMIA_BOUND >= sugar > UPPER_SUGAR_BOUND |
-| VERY_HIGH_SUGAR | sugar > HYPERGLYCEMIA_BOUND						 |
-
-* Insulin reserve is low when the amount in the reservoir is below *LOWER_INSULIN_BOUND*
 
 ## Classes Description
 * BloodModel
