@@ -26,7 +26,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'it.univr.App'
+    mainClass = 'it.univr.app.AutomatedInsulinPump'
 }
 
 run{

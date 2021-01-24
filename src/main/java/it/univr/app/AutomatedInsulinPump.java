@@ -1,4 +1,4 @@
-package it.univr;
+package it.univr.app;
 
 import it.univr.bloodModels.BloodModel;
 import it.univr.bloodModels.InteractiveBloodModel;
@@ -36,8 +36,18 @@ public class AutomatedInsulinPump {
     }
 
     public void run(){
-        while(true) {
-            this.controller.play();
+        boolean continueLoop = true;
+
+        while(continueLoop) {
+            continueLoop = this.controller.play();
         }
+    }
+
+    public static void main(String[] args){
+        int sugarLevel = (Controller.getUpperSugarBound() + Controller.getLowerSugarBound())/2;
+        int incrementRate = 0;
+        int insulinLevel = InsulinReservoir.getCapacity();
+
+        new AutomatedInsulinPump(sugarLevel,incrementRate,insulinLevel,true).run();
     }
 }

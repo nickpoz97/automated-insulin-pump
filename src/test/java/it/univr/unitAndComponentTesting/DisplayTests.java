@@ -1,4 +1,4 @@
-package it.univr;
+package it.univr.unitAndComponentTesting;
 
 import it.univr.states.InsulinStates;
 import it.univr.states.SugarStates;
@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

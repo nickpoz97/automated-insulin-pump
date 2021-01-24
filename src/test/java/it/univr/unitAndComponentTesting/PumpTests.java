@@ -1,4 +1,4 @@
-package it.univr;
+package it.univr.unitAndComponentTesting;
 
 import it.univr.bloodModels.BloodModel;
 import it.univr.bloodModels.InteractiveBloodModel;
@@ -11,16 +11,15 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class PumpTests {
-    private InsulinReservoir insulinReservoir;
     private BloodModel bloodModel;
     private Pump pump;
 
 
     @Before
     public void initialize(){
-        this.insulinReservoir = new InsulinReservoir(4);
+        InsulinReservoir insulinReservoir = new InsulinReservoir(4);
         bloodModel = new InteractiveBloodModel();
-        this.pump = new Pump(this.insulinReservoir, this.bloodModel);
+        this.pump = new Pump(insulinReservoir, this.bloodModel);
     }
 
     @Test

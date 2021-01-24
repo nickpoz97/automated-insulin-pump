@@ -20,7 +20,7 @@ public class InputHandler {
         }
     }
 
-    public void processInput() {
+    public boolean processInput() {
         String choice = "_"; // ! c
         boolean sChosen = false;
 
@@ -33,16 +33,16 @@ public class InputHandler {
                 processSugarAddition(sChosen);
                 sChosen = true;
             } else if (choice.equals("e")) {
-                keyboard.close();
-                exit(0);
+                return false;
             }
         }
         System.out.println();
+        return true;
     }
 
     private void printChoices() {
         System.out.println("Choose an action:");
-        System.out.println("c) continue execution (1 minute time simulation)");
+        System.out.println("c) continue execution (10 minute time simulation)");
         System.out.println("i) fill insulin reservoir");
         System.out.println("s) add sugar");
         System.out.println("e) end simulation");
@@ -69,7 +69,7 @@ public class InputHandler {
         }
 
         System.out.println("Insert sugar amount");
-        System.out.print("negative values are equal to 0 and max allowed value is " + maxSugarAddition + ": ");
+        System.out.print("(negative values are equal to 0 and max allowed value is " + maxSugarAddition + "): ");
         int value;
         try {
             value = Integer.parseInt(keyboard.nextLine());

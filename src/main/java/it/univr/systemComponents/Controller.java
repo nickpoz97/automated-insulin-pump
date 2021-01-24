@@ -54,13 +54,15 @@ public class Controller {
         displays.add(new Display());
     }
 
-    // control iteration
-    public void play(){
+    // blood control iteration
+    public boolean play(){
+        boolean continueLoop = true;
+
         for (Display display : displays) {
             display.printData(lastMeasurement, remainingInsulin, sugarState, insulinState);
         }
         if (inputHandler != null) {
-            inputHandler.processInput();
+            continueLoop = inputHandler.processInput();
         }
         updateSugarMeasurements();
         checkSugarStatus();
@@ -68,6 +70,8 @@ public class Controller {
             regulateSugar();
         }
         checkInsulinStatus();
+
+        return continueLoop;
     }
 
     private void updateSugarMeasurements() {

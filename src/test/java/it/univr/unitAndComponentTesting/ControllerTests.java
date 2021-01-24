@@ -1,4 +1,4 @@
-package it.univr;
+package it.univr.unitAndComponentTesting;
 
 import it.univr.bloodModels.BloodModel;
 import it.univr.bloodModels.InteractiveBloodModel;
@@ -16,15 +16,13 @@ import java.io.PrintStream;
 import static org.junit.Assert.*;
 
 public class ControllerTests {
-    private BloodModel bloodModel;
-    private InsulinReservoir insulinReservoir;
     private Controller controller;
     private InputHandler inputHandler;
 
     @Before
     public void initialize(){
-        bloodModel = new InteractiveBloodModel();
-        insulinReservoir = new InsulinReservoir();
+        BloodModel bloodModel = new InteractiveBloodModel();
+        InsulinReservoir insulinReservoir = new InsulinReservoir();
         inputHandler = new InputHandler(bloodModel, insulinReservoir);
         Pump pump = new Pump(insulinReservoir, bloodModel);
         SugarSensor sugarSensor = new SugarSensor(bloodModel);
@@ -81,7 +79,7 @@ public class ControllerTests {
         }
 
         assertTrue(controller.getIncrement() < 0);
-        assertTrue(controller.getSugarState() != SugarStates.HIGH_SUGAR);
+        assertNotSame(controller.getSugarState(), SugarStates.HIGH_SUGAR);
     }
 
     private void setInput(String inputString){

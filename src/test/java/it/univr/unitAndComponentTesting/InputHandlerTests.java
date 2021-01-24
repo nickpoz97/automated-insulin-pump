@@ -1,4 +1,4 @@
-package it.univr;
+package it.univr.unitAndComponentTesting;
 
 import it.univr.bloodModels.BloodModel;
 import it.univr.bloodModels.InteractiveBloodModel;
