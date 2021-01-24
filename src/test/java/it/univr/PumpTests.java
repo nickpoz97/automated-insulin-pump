@@ -27,7 +27,7 @@ public class PumpTests {
     public void testInjectInsulin(){
         try {
             pump.injectInsulin(4);
-            assertEquals(0, bloodModel.getIncrementRate());
+            assertEquals(-4, bloodModel.getIncrementRate());
             pump.injectInsulin(20);
             fail();
         }

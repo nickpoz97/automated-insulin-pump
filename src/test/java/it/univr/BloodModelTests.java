@@ -18,66 +18,39 @@ public class BloodModelTests {
     }
 
     @Test
-    public void testInvalidBloodDataInstance(){
-        try {
-            this.bloodModel = new InteractiveBloodModel(BloodModel.getMaxSugar()+1, 0);
-            fail();
-        }
-        catch (LethalSugarValuesException e){
-            assertTrue(true);
-        }
-        try{
-            this.bloodModel = new InteractiveBloodModel(BloodModel.getMinSugar()-1, 0);
-            fail();
-        }
-        catch (LethalSugarValuesException e){
-            assertTrue(true);
-        }
-    }
-
-    @Test
     public void testRaisingSugar(){
-        bloodModel.addSugar(2);
-        changingSugarAssertions();
+        int initalSugarLevel = bloodModel.retrieveSugarLevel();
+        int amount = 5;
+        int iterations = 10;
+        int ir = bloodModel.getIncrementRate() + amount;
+
+        bloodModel.addSugar(amount);
+        for (int i = 1 ; i <= iterations ; i++){
+            assertEquals(initalSugarLevel + ir*i, bloodModel.retrieveSugarLevel());
+        }
     }
 
     @Test
     public void testLoweringSugar(){
-        bloodModel.injectInsulin(2);
-        changingSugarAssertions();
-    }
+        int initalSugarLevel = bloodModel.retrieveSugarLevel();
+        int amount = 5;
+        int iterations = 10;
+        int ir = bloodModel.getIncrementRate() - amount;
 
-    private void changingSugarAssertions() {
-        assertEquals(bloodModel.retrieveSugarLevel(), bloodModel.getBaseSugarLevel() + bloodModel.getIncrementRate());
-        assertEquals(bloodModel.retrieveSugarLevel(), bloodModel.getBaseSugarLevel() + 2*bloodModel.getIncrementRate());
-    }
-
-    @Test(expected = LethalSugarValuesException.class)
-    public void testExceedingSugarValue(){
-        bloodModel.addSugar(2);
-        for(int i = 0 ; i < 1000 ; i++){
-            // it also updates sugar level in interactiveBloodData
-            bloodModel.retrieveSugarLevel();
+        bloodModel.injectInsulin(amount);
+        for(int i = 1 ; i <= iterations ; i++){
+            assertEquals(initalSugarLevel + i*ir, bloodModel.retrieveSugarLevel());
         }
-        fail();
-    }
-
-    @Test(expected = LethalSugarValuesException.class)
-    public void testLowSugarValue(){
-        bloodModel.injectInsulin(2);
-
-        for(int i = 0 ; i < 1000 ; i++){
-            // it also updates sugar level in interactiveBloodData
-            bloodModel.retrieveSugarLevel();
-        }
-        fail();
     }
 
     @Test
-    public void insulinInjectionTest(){
-        bloodModel.injectInsulin(2);
-        assertEquals(-2, bloodModel.getIncrementRate());
-        bloodModel.injectInsulin(10);
-        assertEquals(-12, bloodModel.getIncrementRate());
+    public void testInvalidValues(){
+        int initialIncrementRate = bloodModel.getIncrementRate();
+        int amount = -3;
+        bloodModel.injectInsulin(amount);
+        assertEquals(initialIncrementRate, bloodModel.getIncrementRate());
+
+        bloodModel.addSugar(-3);
+        assertEquals(initialIncrementRate, bloodModel.getIncrementRate());
     }
 }

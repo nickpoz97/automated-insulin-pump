@@ -20,12 +20,8 @@ public class SugarSensorTests {
 
     @Test
     public void testGetSugarInBlood(){
-        try {
-            assertEquals(bloodModel.getBaseSugarLevel() + bloodModel.getIncrementRate(), sugarSensor.getSugarInBlood());
-        }
-        catch (LethalSugarValuesException e){
-            assertTrue(true);
-        }
+        assertEquals(bloodModel.getBaseSugarLevel(), sugarSensor.getSugarInBlood());
+        assertEquals(bloodModel.getBaseSugarLevel() + 5, sugarSensor.getSugarInBlood());
     }
 
 }

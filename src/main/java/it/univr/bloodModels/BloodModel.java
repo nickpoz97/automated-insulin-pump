@@ -33,7 +33,7 @@ public abstract class BloodModel {
     }
 
     // only used for testing
-    public int getSugarLevel(){
+    protected int getSugarLevel(){
         return this.actualSugarLevel;
     }
 
