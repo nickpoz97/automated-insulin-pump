@@ -7,26 +7,26 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Display {
-    private Queue<String> infoQueue;
-    private static Calendar calendar = null;
+    private final Queue<String> infoQueue;
+    private static Calendar timestamp = null;
+
+    private int sugarLevel;
+    private int remainingInsulin;
+    private String statusMessage;
 
     public Display(){
-        if(calendar == null){
-            calendar = Calendar.getInstance();
+        if(timestamp == null){
+            timestamp = Calendar.getInstance();
         }
         infoQueue = new LinkedList<>();
     }
 
-    public void printData(int sugar, int remainingInsulin, SugarStates sugarStatus, InsulinStates insulinStatus){
-        String statusMessage = interpretStatus(sugarStatus, insulinStatus);
-        System.out.println();
-        System.out.format("Date: %td/%tm/%tY %tT\n", calendar,calendar,calendar,calendar);
-        System.out.println("Sugar level: " + sugar);
-        System.out.println("Remaining insulin: " + remainingInsulin);
-        System.out.println(statusMessage);
-        this.printInfos();
-        System.out.println();
-        calendar.add(Calendar.MINUTE, 10);
+    public void printData(int sugarLevel, int remainingInsulin, SugarStates sugarStatus, InsulinStates insulinStatus){
+        this.sugarLevel = sugarLevel;
+        this.remainingInsulin = remainingInsulin;
+        this.statusMessage = interpretStatus(sugarStatus, insulinStatus);
+        System.out.println(this);
+        timestamp.add(Calendar.MINUTE, 10);
     }
 
     private String interpretStatus(SugarStates sugarStatus, InsulinStates insulinStatus) {
@@ -72,9 +72,26 @@ public class Display {
         infoQueue.add(message);
     }
 
-    private void printInfos() {
+    private String extractInfos() {
+        String infos = "";
+
         while (!infoQueue.isEmpty()) {
-            System.out.println(infoQueue.poll());
+            infos = infos + infoQueue.poll() +'\n';
         }
+
+        return infos;
+    }
+
+    public Calendar getTimestamp(){
+        return timestamp;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Date: %td/%tm/%tY %tT\n", timestamp, timestamp, timestamp, timestamp) +
+                "Sugar level: " + sugarLevel + '\n' +
+                "Remaining insulin: " + remainingInsulin + '\n' +
+                statusMessage + '\n' +
+                extractInfos();
     }
 }

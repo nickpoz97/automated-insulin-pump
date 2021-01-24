@@ -17,7 +17,7 @@ public class PumpTests {
 
 
     @Before
-    public void initialization(){
+    public void initialize(){
         this.insulinReservoir = new InsulinReservoir(4);
         bloodModel = new InteractiveBloodModel();
         this.pump = new Pump(this.insulinReservoir, this.bloodModel);

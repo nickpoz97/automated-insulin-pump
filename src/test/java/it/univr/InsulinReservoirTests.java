@@ -9,7 +9,7 @@ public class InsulinReservoirTests {
     private InsulinReservoir insulinReservoir;
 
     @Test
-    public void initializionTest(){
+    public void initialize(){
         insulinReservoir = new InsulinReservoir(InsulinReservoir.getCapacity()+100);
         assertEquals(InsulinReservoir.getCapacity(), insulinReservoir.getAmount());
 

@@ -12,7 +12,7 @@ public class SugarSensorTests {
     private SugarSensor sugarSensor;
 
     @Before
-    public void initializeBloodModel(){
+    public void initialize(){
         this.bloodModel = new InteractiveBloodModel();
         sugarSensor = new SugarSensor(bloodModel);
         bloodModel.addSugar(5);

@@ -20,16 +20,15 @@ public class InputHandlerTests {
     private InputHandler inputHandler;
 
     @Before
-    public void initilization(){
+    public void initialize(){
         bloodModel = new InteractiveBloodModel();
-        insulinReservoir = new InsulinReservoir();
-        inputHandler = new InputHandler(bloodModel, insulinReservoir);
+        insulinReservoir = new InsulinReservoir(InsulinReservoir.getCapacity()-100);
         // delete output
         System.setOut(new PrintStream(OutputStream.nullOutputStream()));
-        // backup input stream
+        inputHandler = new InputHandler(bloodModel, insulinReservoir);
     }
 
-    //@Test
+    @Test
     public void testAddInsulin() {
         int formerAmount = insulinReservoir.getAmount();
         // +100 insulin
@@ -39,7 +38,7 @@ public class InputHandlerTests {
         assertEquals(actualAmount, insulinReservoir.getAmount());
     }
 
-    //@Test
+    @Test
     public void testAddSugar(){
         int formerAmount = bloodModel.getIncrementRate();
         // +4 sugar
@@ -49,7 +48,7 @@ public class InputHandlerTests {
         assertEquals(actualAmount, bloodModel.getIncrementRate());
     }
 
-    //@Test
+    @Test
     public void testAddBoth(){
         int formerBlood = bloodModel.getIncrementRate();
         int formerInsulin = insulinReservoir.getAmount();
@@ -65,5 +64,6 @@ public class InputHandlerTests {
     private void setStdInput(String inputString){
         InputStream in = new ByteArrayInputStream(inputString.getBytes());
         System.setIn(in);
+        inputHandler.updateInputStream();
     }
 }

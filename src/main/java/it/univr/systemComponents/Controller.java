@@ -159,4 +159,20 @@ public class Controller {
     }
 
     public static int getLowerInsulinBound(){ return LOWER_INSULIN_BOUND; }
+
+    public int getIncrement() {
+        return increment;
+    }
+
+    public SugarStates getSugarState() {
+        return sugarState;
+    }
+
+    public InsulinStates getInsulinState() {
+        return insulinState;
+    }
+
+    public int getDisplayNumber(){
+        return displays.size();
+    }
 }

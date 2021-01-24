@@ -9,12 +9,15 @@ import static java.lang.System.exit;
 public class InputHandler {
     private final BloodModel bloodModel;
     private final InsulinReservoir insulinReservoir;
-    private static final Scanner keyboard = new Scanner(System.in);
+    private static Scanner keyboard = null;
     private static final int maxSugarAddition = Controller.getLowerInsulinBound() - 10;
 
     public InputHandler(BloodModel bloodModel, InsulinReservoir insulinReservoir){
         this.bloodModel = bloodModel;
         this.insulinReservoir = insulinReservoir;
+        if(keyboard == null){
+            keyboard = new Scanner(System.in);
+        }
     }
 
     public void processInput() {
@@ -34,6 +37,7 @@ public class InputHandler {
                 exit(0);
             }
         }
+        System.out.println();
     }
 
     private void printChoices() {
@@ -76,5 +80,9 @@ public class InputHandler {
             value = 0;
         }
         bloodModel.addSugar(value);
+    }
+
+    public void updateInputStream(){
+        keyboard = new Scanner(System.in);
     }
 }
