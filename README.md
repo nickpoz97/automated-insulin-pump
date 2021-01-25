@@ -131,7 +131,7 @@ Every previous scenario has been tested using an *InputStream* as input and cont
 * Class: 92.3%
 * Method: 97.2%
 * Line: 96.5 %
-[link for test coverage files](https://github.com/nickpoz97/automated-insulin-pump/tree/main/doc/testReports)
+* [link for test coverage files](https://github.com/nickpoz97/automated-insulin-pump/tree/main/doc/testReports)
 ### Diagrams
 * [use case diagram](https://github.com/nickpoz97/automated-insulin-pump/blob/main/doc/diagrams/use_case.pdf)
 * [sequence diagram polling loop](https://github.com/nickpoz97/automated-insulin-pump/blob/main/doc/diagrams/sequence_diagram_polling_loop.pdf)
