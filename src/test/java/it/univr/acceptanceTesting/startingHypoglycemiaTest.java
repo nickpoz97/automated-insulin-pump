@@ -35,7 +35,7 @@ public class startingHypoglycemiaTest {
         assertEquals(SugarStates.VERY_LOW_SUGAR, sugarState);
 
         automatedInsulinPump.run();
-        int increment = automatedInsulinPump.getController().getIncrement();
+        int increment = automatedInsulinPump.getController().getSugarIncrement();
         assertTrue(increment > 10);
     }
 
@@ -47,7 +47,7 @@ public class startingHypoglycemiaTest {
         SugarStates sugarState = automatedInsulinPump.getController().getSugarState();
         assertEquals(SugarStates.VERY_LOW_SUGAR, sugarState);
         automatedInsulinPump.run();
-        int increment = automatedInsulinPump.getController().getIncrement();
+        int increment = automatedInsulinPump.getController().getSugarIncrement();
         assertTrue(increment <= 0);
     }
 }

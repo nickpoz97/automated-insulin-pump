@@ -35,7 +35,7 @@ public class lowSugarStartTest {
         assertEquals(SugarStates.LOW_SUGAR, sugarState);
 
         automatedInsulinPump.run();
-        int increment = automatedInsulinPump.getController().getIncrement();
+        int increment = automatedInsulinPump.getController().getSugarIncrement();
 
         assertTrue(increment > 0);
         assertTrue(increment < 10);
@@ -50,7 +50,7 @@ public class lowSugarStartTest {
         assertEquals(SugarStates.LOW_SUGAR, sugarState);
 
         automatedInsulinPump.run();
-        int increment = automatedInsulinPump.getController().getIncrement();
+        int increment = automatedInsulinPump.getController().getSugarIncrement();
         assertTrue(increment > 30);
     }
 
@@ -63,7 +63,7 @@ public class lowSugarStartTest {
         assertEquals(SugarStates.LOW_SUGAR, sugarState);
 
         automatedInsulinPump.run();
-        int increment = automatedInsulinPump.getController().getIncrement();
+        int increment = automatedInsulinPump.getController().getSugarIncrement();
         assertTrue(increment < 0);
     }
 }

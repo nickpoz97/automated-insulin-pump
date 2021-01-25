@@ -6,13 +6,11 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Scanner;
 
-import static java.lang.System.exit;
-
 public class InputHandler {
     private final BloodModel bloodModel;
     private final InsulinReservoir insulinReservoir;
     private static Scanner keyboard = null;
-    private static final int maxSugarAddition = Controller.getLowerInsulinBound() - 10;
+    private static final int MAX_SUGAR_ADDITION = Controller.getLowerInsulinBound() - 10;
 
     public InputHandler(BloodModel bloodModel, InsulinReservoir insulinReservoir){
         this.bloodModel = bloodModel;
@@ -71,12 +69,12 @@ public class InputHandler {
         }
 
         System.out.println("Insert sugar amount");
-        System.out.print("(negative values are equal to 0 and max allowed value is " + maxSugarAddition + "): ");
+        System.out.print("(negative values are equal to 0 and max allowed value is " + MAX_SUGAR_ADDITION + "): ");
         int value;
         try {
             value = Integer.parseInt(keyboard.nextLine());
             value = Math.max(value, 0);
-            value = Math.min(value, maxSugarAddition);
+            value = Math.min(value, MAX_SUGAR_ADDITION);
         }
         catch (NumberFormatException e){
             value = 0;

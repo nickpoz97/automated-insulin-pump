@@ -55,7 +55,7 @@ public class ControllerTests {
 
         assertEquals(InsulinStates.GOOD, controller.getInsulinState());
         assertEquals(SugarStates.HIGH_SUGAR, controller.getSugarState());
-        assertTrue(controller.getIncrement() > 0);
+        assertTrue(controller.getSugarIncrement() > 0);
 
         for(int i = 0 ; i < 10 ; i++){
             // each iter: +50 sugar
@@ -75,7 +75,7 @@ public class ControllerTests {
             controller.play();
         }
 
-        assertTrue(controller.getIncrement() < 0);
+        assertTrue(controller.getSugarIncrement() < 0);
         assertNotSame(controller.getSugarState(), SugarStates.HIGH_SUGAR);
     }
 }

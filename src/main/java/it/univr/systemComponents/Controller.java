@@ -29,7 +29,7 @@ public class Controller {
     // status
     private int remainingInsulin;
     private int lastMeasurement;
-    private int increment;
+    private int sugarIncrement;
     private SugarStates sugarState;
     private InsulinStates insulinState;
 
@@ -77,9 +77,7 @@ public class Controller {
     private void updateSugarMeasurements() {
         int oldMeasurement = lastMeasurement;
         lastMeasurement = sugarSensor.getSugarInBlood();
-        increment = lastMeasurement - oldMeasurement;
-
-        System.out.println("THIS IS THE INCREMENT: " + increment);
+        sugarIncrement = lastMeasurement - oldMeasurement;
     }
 
     private void checkSugarStatus() {
@@ -101,12 +99,12 @@ public class Controller {
     }
 
     private void sendIncrementInfo() {
-        if(increment < 0){
+        if(sugarIncrement < 0){
             for(Display display : displays){
                 display.addInfo("Sugar is lowering");
             }
         }
-        else if(increment > 0){
+        else if(sugarIncrement > 0){
             for(Display display : displays){
                 display.addInfo("Sugar is rising");
             }
@@ -119,11 +117,11 @@ public class Controller {
     }
 
     private void regulateSugar(){
-        int quantity = max(0, increment);
+        int quantity = max(0, sugarIncrement);
         if (sugarState == SugarStates.HIGH_SUGAR) {
             quantity += LITTLE_ADDITION;
         }
-        else if (sugarState == SugarStates.VERY_HIGH_SUGAR && increment >= 0){
+        else if (sugarState == SugarStates.VERY_HIGH_SUGAR && sugarIncrement >= 0){
             quantity += HUGE_ADDITION;
         }
         insulinInjection(quantity);
@@ -173,8 +171,8 @@ public class Controller {
         return HYPOGLYCEMIA_BOUND;
     }
 
-    public int getIncrement() {
-        return increment;
+    public int getSugarIncrement() {
+        return sugarIncrement;
     }
 
     public SugarStates getSugarState() {

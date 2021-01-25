@@ -3,7 +3,6 @@ package it.univr.acceptanceTesting;
 import it.univr.states.SugarStates;
 import it.univr.systemComponents.Controller;
 import it.univr.systemComponents.InputHandler;
-import it.univr.systemComponents.InsulinReservoir;
 import it.univr.systemWrapper.AutomatedInsulinPump;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +34,7 @@ public class startHyperglycemiaTest {
         assertEquals(SugarStates.VERY_HIGH_SUGAR, sugarState);
 
         automatedInsulinPump.run();
-        int increment = automatedInsulinPump.getController().getIncrement();
+        int increment = automatedInsulinPump.getController().getSugarIncrement();
 
         assertTrue(increment <= -10);
     }
@@ -48,13 +47,13 @@ public class startHyperglycemiaTest {
         SugarStates sugarState = automatedInsulinPump.getController().getSugarState();
         assertEquals(SugarStates.VERY_HIGH_SUGAR, sugarState);
         automatedInsulinPump.run();
-        int increment = automatedInsulinPump.getController().getIncrement();
+        int increment = automatedInsulinPump.getController().getSugarIncrement();
         assertTrue(increment >= 0);
 
         // refill insulin
         InputHandler.updateInputStream("i\n500\nc\ne\n");
         automatedInsulinPump.run();
-        increment = automatedInsulinPump.getController().getIncrement();
+        increment = automatedInsulinPump.getController().getSugarIncrement();
         assertTrue(increment < 0);
     }
 }
