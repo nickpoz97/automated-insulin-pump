@@ -1,5 +1,7 @@
 # automated-insulin-pump
 High level implementation of an automated insulin pump written in Java with simulated blood.
+Author: *Niccolò Pozzetti*
+Serial number: *VR456924*
 ## Requirements
 * The software needs to monitor blood status through sensors and inform user with values and messages printed on a display.
 * It must also lower sugar value if it rises or if it is high.
