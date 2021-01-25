@@ -125,4 +125,15 @@ These scenarios reflects the behavior of a user aware of his condition
 
 ## Quality Assurance
 ### Test Selection
+Every previous scenario has been tested using an *InputStream* as input and controller status as output check
+[link for acceptance tests](https://github.com/nickpoz97/automated-insulin-pump/tree/main/src/test/java/it/univr/acceptanceTesting)
 ### Test Coverage
+* Class: 92.3%
+* Method: 97.2%
+* Line: 96.5 %
+[link for test coverage files](https://github.com/nickpoz97/automated-insulin-pump/tree/main/doc/testReports)
+### Diagrams
+* [use case diagram](https://github.com/nickpoz97/automated-insulin-pump/blob/main/doc/diagrams/use_case.pdf)
+* [sequence diagram polling loop](https://github.com/nickpoz97/automated-insulin-pump/blob/main/doc/diagrams/sequence_diagram_polling_loop.pdf)
+* [class diagram](https://github.com/nickpoz97/automated-insulin-pump/blob/main/doc/diagrams/class_diagram.pdf)
+* [finite state machine diagram](https://github.com/nickpoz97/automated-insulin-pump/blob/main/doc/diagrams/finite_state_machine.pdf)
