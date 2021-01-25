@@ -1,4 +1,4 @@
-package it.univr.app;
+package it.univr.systemWrapper;
 
 import it.univr.bloodModels.BloodModel;
 import it.univr.bloodModels.InteractiveBloodModel;
@@ -10,10 +10,10 @@ public class AutomatedInsulinPump {
     private Controller controller;
     private BloodModel bloodModel;
     private final InsulinReservoir insulinReservoir;
-    private final boolean testingMode;
+    private final boolean interactiveMode;
 
-    public AutomatedInsulinPump(int sugarLevel, int incrementRate, int insulinAmount, boolean testingMode){
-        this.testingMode = testingMode;
+    public AutomatedInsulinPump(int sugarLevel, int incrementRate, int insulinAmount, boolean interactiveMode){
+        this.interactiveMode = interactiveMode;
         this.insulinReservoir = new InsulinReservoir(insulinAmount);
         instantiateBloodModel(sugarLevel, incrementRate);
         SugarSensor sugarSensor = new SugarSensor(bloodModel);
@@ -23,15 +23,18 @@ public class AutomatedInsulinPump {
     }
 
     private void instantiateBloodModel(int sugarLevel, int incrementRate) {
-        if(testingMode) {
+        if(interactiveMode) {
             this.bloodModel = new InteractiveBloodModel(sugarLevel, incrementRate);
         }
     }
 
     private void instantiateController(Pump pump, Display display, SugarSensor sugarSensor){
-        if(testingMode){
+        if(interactiveMode){
             InputHandler inputHandler = new InputHandler(bloodModel, insulinReservoir);
             this.controller = new Controller(pump,display,sugarSensor,inputHandler);
+        }
+        else{
+            this.controller = new Controller(pump,display,sugarSensor);
         }
     }
 
@@ -43,11 +46,7 @@ public class AutomatedInsulinPump {
         }
     }
 
-    public static void main(String[] args){
-        int sugarLevel = (Controller.getUpperSugarBound() + Controller.getLowerSugarBound())/2;
-        int incrementRate = 0;
-        int insulinLevel = InsulinReservoir.getCapacity();
-
-        new AutomatedInsulinPump(sugarLevel,incrementRate,insulinLevel,true).run();
+    public Controller getController() {
+        return controller;
     }
 }

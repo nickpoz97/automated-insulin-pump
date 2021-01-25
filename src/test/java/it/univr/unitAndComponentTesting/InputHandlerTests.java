@@ -32,7 +32,7 @@ public class InputHandlerTests {
     public void testAddInsulin() {
         int formerAmount = insulinReservoir.getAmount();
         // +100 insulin
-        this.setStdInput("i\n100\nc\n");
+        InputHandler.updateInputStream("i\n100\nc\n");
         inputHandler.processInput();
         int actualAmount = Math.min(formerAmount + 100, InsulinReservoir.getCapacity()) ;
         assertEquals(actualAmount, insulinReservoir.getAmount());
@@ -42,7 +42,7 @@ public class InputHandlerTests {
     public void testAddSugar(){
         int formerAmount = bloodModel.getIncrementRate();
         // +4 sugar
-        this.setStdInput("s\n4\nc\n");
+        InputHandler.updateInputStream("s\n4\nc\n");
         inputHandler.processInput();
         int actualAmount = formerAmount+4;
         assertEquals(actualAmount, bloodModel.getIncrementRate());
@@ -53,17 +53,11 @@ public class InputHandlerTests {
         int formerBlood = bloodModel.getIncrementRate();
         int formerInsulin = insulinReservoir.getAmount();
         // +8 sugar, +30 insulin, '0' sugar, '0' insulin
-        this.setStdInput("s\n8\ni\n30\ns\n-4\ni\n-6\nc\n");
+        InputHandler.updateInputStream("s\n8\ni\n30\ns\n-4\ni\n-6\nc\n");
         inputHandler.processInput();
         int actualBlood = formerBlood+8;
         int actualInsulin = Math.min(formerInsulin + 30, InsulinReservoir.getCapacity()) ;
         assertEquals(actualBlood, bloodModel.getIncrementRate());
         assertEquals(actualInsulin, insulinReservoir.getAmount());
-    }
-
-    private void setStdInput(String inputString){
-        InputStream in = new ByteArrayInputStream(inputString.getBytes());
-        System.setIn(in);
-        inputHandler.updateInputStream();
     }
 }

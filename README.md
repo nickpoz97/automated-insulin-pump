@@ -52,13 +52,11 @@ These scenarios reflects the behavior of a user aware of his condition
 
 ### Starting from a low sugar level, user ignores display
 * sugar is below a certain bound (but not in a dangerous state), but the user ignores the information
-* Normal flow 1
-	* sugar level is low but not in hypoglycemia and is stable
 * Normal flow 2
-	* sugar level is low but not in hypoglycemia and is decreasing
+	* sugar level is low but not in hypoglycemia
 * Bad situation
 	* sugar level is in hypoglycemia level and is decreasing
-Ending
+* Ending
 	* Display should indicate every information
 
 ### Sugar level is dangerously high (hyperglycemia)

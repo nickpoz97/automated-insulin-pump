@@ -2,6 +2,8 @@ package it.univr.systemComponents;
 
 import it.univr.bloodModels.BloodModel;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Scanner;
 
 import static java.lang.System.exit;
@@ -82,7 +84,9 @@ public class InputHandler {
         bloodModel.addSugar(value);
     }
 
-    public void updateInputStream(){
+    public static void updateInputStream(String inputString){
+        InputStream in = new ByteArrayInputStream(inputString.getBytes());
+        System.setIn(in);
         keyboard = new Scanner(System.in);
     }
 }

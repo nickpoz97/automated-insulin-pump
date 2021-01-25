@@ -1,0 +1,180 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Display</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.univr.systemComponents</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Display (it.univr.systemComponents)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Display</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/ 10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (39/ 39)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.univr.systemComponents;
+<i>2</i>&nbsp;import it.univr.states.InsulinStates;
+<i>3</i>&nbsp;import it.univr.states.SugarStates;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import java.util.Calendar;
+<i>6</i>&nbsp;import java.util.LinkedList;
+<i>7</i>&nbsp;import java.util.Queue;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;public class Display {
+<i>10</i>&nbsp;    private final Queue&lt;String&gt; infoQueue;
+<b class="fc"><i>11</i>&nbsp;    private static Calendar timestamp = null;</b>
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;    private int sugarLevel;
+<i>14</i>&nbsp;    private int remainingInsulin;
+<i>15</i>&nbsp;    private String statusMessage;
+<i>16</i>&nbsp;
+<b class="fc"><i>17</i>&nbsp;    public Display(){</b>
+<b class="fc"><i>18</i>&nbsp;        if(timestamp == null){</b>
+<b class="fc"><i>19</i>&nbsp;            timestamp = Calendar.getInstance();</b>
+<i>20</i>&nbsp;        }
+<b class="fc"><i>21</i>&nbsp;        infoQueue = new LinkedList&lt;&gt;();</b>
+<b class="fc"><i>22</i>&nbsp;    }</b>
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    public void printData(int sugarLevel, int remainingInsulin, SugarStates sugarStatus, InsulinStates insulinStatus){
+<b class="fc"><i>25</i>&nbsp;        this.sugarLevel = sugarLevel;</b>
+<b class="fc"><i>26</i>&nbsp;        this.remainingInsulin = remainingInsulin;</b>
+<b class="fc"><i>27</i>&nbsp;        this.statusMessage = interpretStatus(sugarStatus, insulinStatus);</b>
+<b class="fc"><i>28</i>&nbsp;        System.out.println(this);</b>
+<b class="fc"><i>29</i>&nbsp;        timestamp.add(Calendar.MINUTE, 10);</b>
+<b class="fc"><i>30</i>&nbsp;    }</b>
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    private String interpretStatus(SugarStates sugarStatus, InsulinStates insulinStatus) {
+<b class="fc"><i>33</i>&nbsp;        String message = &quot;&quot;;</b>
+<i>34</i>&nbsp;
+<b class="fc"><i>35</i>&nbsp;        message += &quot;Insulin: &quot; + interpretInsulinStatus(insulinStatus) + &#39;\n&#39;;</b>
+<b class="fc"><i>36</i>&nbsp;        message += &quot;Sugar: &quot; + interpretSugarStatus(sugarStatus);</b>
+<i>37</i>&nbsp;
+<b class="fc"><i>38</i>&nbsp;        return message;</b>
+<i>39</i>&nbsp;    }
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    private String interpretInsulinStatus(InsulinStates insulinStatus) {
+<b class="fc"><i>42</i>&nbsp;        if(insulinStatus == InsulinStates.LOW_RESERVE){</b>
+<b class="fc"><i>43</i>&nbsp;            return &quot;WARNING! Low remaining insulin&quot;;</b>
+<i>44</i>&nbsp;        }
+<b class="fc"><i>45</i>&nbsp;        else if(insulinStatus == InsulinStates.EMPTY){</b>
+<b class="fc"><i>46</i>&nbsp;            return &quot;DANGER! Empty reservoir, fill it!&quot;;</b>
+<i>47</i>&nbsp;        }
+<i>48</i>&nbsp;        else{
+<b class="fc"><i>49</i>&nbsp;            return &quot;Good&quot;;</b>
+<i>50</i>&nbsp;        }
+<i>51</i>&nbsp;    }
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    private String interpretSugarStatus(SugarStates sugarStatus) {
+<b class="fc"><i>54</i>&nbsp;        if(sugarStatus == SugarStates.LOW_SUGAR){</b>
+<b class="fc"><i>55</i>&nbsp;            return &quot;WARNING! low sugar level&quot;;</b>
+<i>56</i>&nbsp;        }
+<b class="fc"><i>57</i>&nbsp;        else if(sugarStatus == SugarStates.HIGH_SUGAR){</b>
+<b class="fc"><i>58</i>&nbsp;            return &quot;WARNING! high sugar level&quot;;</b>
+<i>59</i>&nbsp;        }
+<b class="fc"><i>60</i>&nbsp;        else if(sugarStatus == SugarStates.VERY_HIGH_SUGAR){</b>
+<b class="fc"><i>61</i>&nbsp;            return &quot;DANGER! sugar level is lethally high! You have eaten too much sugar or no insuline available&quot;;</b>
+<i>62</i>&nbsp;        }
+<b class="fc"><i>63</i>&nbsp;        else if(sugarStatus == SugarStates.VERY_LOW_SUGAR){</b>
+<b class="fc"><i>64</i>&nbsp;            return &quot;DANGER! sugar level is lethally low! Eat something with sugar&quot;;</b>
+<i>65</i>&nbsp;        }
+<i>66</i>&nbsp;        else {
+<b class="fc"><i>67</i>&nbsp;            return &quot;Good&quot;;</b>
+<i>68</i>&nbsp;        }
+<i>69</i>&nbsp;    }
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;    public void addInfo(String message){
+<b class="fc"><i>72</i>&nbsp;        infoQueue.add(message);</b>
+<b class="fc"><i>73</i>&nbsp;    }</b>
+<i>74</i>&nbsp;
+<i>75</i>&nbsp;    private String extractInfos() {
+<b class="fc"><i>76</i>&nbsp;        String infos = &quot;&quot;;</b>
+<i>77</i>&nbsp;
+<b class="fc"><i>78</i>&nbsp;        while (!infoQueue.isEmpty()) {</b>
+<b class="fc"><i>79</i>&nbsp;            infos = infos + infoQueue.poll() +&#39;\n&#39;;</b>
+<i>80</i>&nbsp;        }
+<i>81</i>&nbsp;
+<b class="fc"><i>82</i>&nbsp;        return infos;</b>
+<i>83</i>&nbsp;    }
+<i>84</i>&nbsp;
+<i>85</i>&nbsp;    public Calendar getTimestamp(){
+<b class="fc"><i>86</i>&nbsp;        return timestamp;</b>
+<i>87</i>&nbsp;    }
+<i>88</i>&nbsp;
+<i>89</i>&nbsp;    @Override
+<i>90</i>&nbsp;    public String toString() {
+<b class="fc"><i>91</i>&nbsp;        return String.format(&quot;Date: %td/%tm/%tY %tT\n&quot;, timestamp, timestamp, timestamp, timestamp) +</b>
+<i>92</i>&nbsp;                &quot;Sugar level: &quot; + sugarLevel + &#39;\n&#39; +
+<i>93</i>&nbsp;                &quot;Remaining insulin: &quot; + remainingInsulin + &#39;\n&#39; +
+<i>94</i>&nbsp;                statusMessage + &#39;\n&#39; +
+<b class="fc"><i>95</i>&nbsp;                extractInfos();</b>
+<i>96</i>&nbsp;    }
+<i>97</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-01-25 03:42</div>
+</div>
+</body>
+</html>

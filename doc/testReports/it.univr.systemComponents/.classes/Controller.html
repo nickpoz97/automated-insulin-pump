@@ -1,0 +1,274 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Controller</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.univr.systemComponents</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Controller (it.univr.systemComponents)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Controller</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (19/ 19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (86/ 86)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.univr.systemComponents;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.univr.exceptions.InsulinAvailabilityException;
+<i>4</i>&nbsp;import it.univr.states.InsulinStates;
+<i>5</i>&nbsp;import it.univr.states.SugarStates;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.util.ArrayList;
+<i>8</i>&nbsp;import java.util.List;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import static java.lang.Math.max;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;public class Controller {
+<i>13</i>&nbsp;    // bounds
+<i>14</i>&nbsp;    private static final int LOWER_SUGAR_BOUND = 60;
+<i>15</i>&nbsp;    private static final int UPPER_SUGAR_BOUND = 100;
+<i>16</i>&nbsp;    private static final int HYPERGLYCEMIA_BOUND = 130;
+<i>17</i>&nbsp;    private static final int HYPOGLYCEMIA_BOUND = 20;
+<i>18</i>&nbsp;    private static final int LOWER_INSULIN_BOUND = 60;
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    // constants used to lower sugar level
+<i>21</i>&nbsp;    private static final int LITTLE_ADDITION = 1;
+<i>22</i>&nbsp;    private static final int HUGE_ADDITION = 10;
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    // sensor interfaces
+<i>25</i>&nbsp;    private final Pump pump;
+<b class="fc"><i>26</i>&nbsp;    private final List&lt;Display&gt; displays = new ArrayList&lt;&gt;(2);</b>
+<i>27</i>&nbsp;    private final SugarSensor sugarSensor;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    // status
+<i>30</i>&nbsp;    private int remainingInsulin;
+<i>31</i>&nbsp;    private int lastMeasurement;
+<i>32</i>&nbsp;    private int increment;
+<i>33</i>&nbsp;    private SugarStates sugarState;
+<i>34</i>&nbsp;    private InsulinStates insulinState;
+<i>35</i>&nbsp;
+<b class="fc"><i>36</i>&nbsp;    private InputHandler inputHandler = null;</b>
+<i>37</i>&nbsp;
+<b class="fc"><i>38</i>&nbsp;    public Controller(Pump pump, Display display, SugarSensor sugarSensor) {</b>
+<b class="fc"><i>39</i>&nbsp;        this.pump = pump;</b>
+<b class="fc"><i>40</i>&nbsp;        displays.add(display);</b>
+<b class="fc"><i>41</i>&nbsp;        this.sugarSensor = sugarSensor;</b>
+<b class="fc"><i>42</i>&nbsp;        this.lastMeasurement = this.sugarSensor.getSugarInBlood();</b>
+<b class="fc"><i>43</i>&nbsp;        this.checkSugarStatus();</b>
+<b class="fc"><i>44</i>&nbsp;        this.checkInsulinStatus();</b>
+<b class="fc"><i>45</i>&nbsp;    }</b>
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    public Controller(Pump pump, Display display, SugarSensor sugarSensor, InputHandler inputHandler){
+<b class="fc"><i>48</i>&nbsp;        this(pump, display, sugarSensor);</b>
+<b class="fc"><i>49</i>&nbsp;        this.inputHandler = inputHandler;</b>
+<b class="fc"><i>50</i>&nbsp;    }</b>
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    public void addDisplay(){
+<b class="fc"><i>53</i>&nbsp;        displays.add(new Display());</b>
+<b class="fc"><i>54</i>&nbsp;    }</b>
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    // blood control iteration
+<i>57</i>&nbsp;    public boolean play(){
+<b class="fc"><i>58</i>&nbsp;        boolean continueLoop = true;</b>
+<i>59</i>&nbsp;
+<b class="fc"><i>60</i>&nbsp;        for (Display display : displays) {</b>
+<b class="fc"><i>61</i>&nbsp;            display.printData(lastMeasurement, remainingInsulin, sugarState, insulinState);</b>
+<b class="fc"><i>62</i>&nbsp;        }</b>
+<b class="fc"><i>63</i>&nbsp;        if (inputHandler != null) {</b>
+<b class="fc"><i>64</i>&nbsp;            continueLoop = inputHandler.processInput();</b>
+<i>65</i>&nbsp;        }
+<b class="fc"><i>66</i>&nbsp;        updateSugarMeasurements();</b>
+<b class="fc"><i>67</i>&nbsp;        sendIncrementInfo();</b>
+<b class="fc"><i>68</i>&nbsp;        checkSugarStatus();</b>
+<b class="fc"><i>69</i>&nbsp;        if(sugarState != SugarStates.LOW_SUGAR &amp;&amp; sugarState != SugarStates.VERY_LOW_SUGAR) {</b>
+<b class="fc"><i>70</i>&nbsp;            regulateSugar();</b>
+<i>71</i>&nbsp;        }
+<b class="fc"><i>72</i>&nbsp;        checkInsulinStatus();</b>
+<i>73</i>&nbsp;
+<b class="fc"><i>74</i>&nbsp;        return continueLoop;</b>
+<i>75</i>&nbsp;    }
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;    private void updateSugarMeasurements() {
+<b class="fc"><i>78</i>&nbsp;        int oldMeasurement = lastMeasurement;</b>
+<b class="fc"><i>79</i>&nbsp;        lastMeasurement = sugarSensor.getSugarInBlood();</b>
+<b class="fc"><i>80</i>&nbsp;        increment = lastMeasurement - oldMeasurement;</b>
+<i>81</i>&nbsp;
+<b class="fc"><i>82</i>&nbsp;        System.out.println(&quot;THIS IS THE INCREMENT: &quot; + increment);</b>
+<b class="fc"><i>83</i>&nbsp;    }</b>
+<i>84</i>&nbsp;
+<i>85</i>&nbsp;    private void checkSugarStatus() {
+<b class="fc"><i>86</i>&nbsp;        if(this.lastMeasurement &lt; HYPOGLYCEMIA_BOUND){</b>
+<b class="fc"><i>87</i>&nbsp;            sugarState = SugarStates.VERY_LOW_SUGAR;</b>
+<i>88</i>&nbsp;        }
+<b class="fc"><i>89</i>&nbsp;        else if (this.lastMeasurement &lt; LOWER_SUGAR_BOUND){</b>
+<b class="fc"><i>90</i>&nbsp;            sugarState = SugarStates.LOW_SUGAR;</b>
+<i>91</i>&nbsp;        }
+<b class="fc"><i>92</i>&nbsp;        else if (this.lastMeasurement &gt; HYPERGLYCEMIA_BOUND){</b>
+<b class="fc"><i>93</i>&nbsp;            sugarState = SugarStates.VERY_HIGH_SUGAR;</b>
+<i>94</i>&nbsp;        }
+<b class="fc"><i>95</i>&nbsp;        else if (this.lastMeasurement &gt; UPPER_SUGAR_BOUND){</b>
+<b class="fc"><i>96</i>&nbsp;            sugarState = SugarStates.HIGH_SUGAR;</b>
+<i>97</i>&nbsp;        }
+<i>98</i>&nbsp;        else{
+<b class="fc"><i>99</i>&nbsp;            sugarState = SugarStates.GOOD;</b>
+<i>100</i>&nbsp;        }
+<b class="fc"><i>101</i>&nbsp;    }</b>
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;    private void sendIncrementInfo() {
+<b class="fc"><i>104</i>&nbsp;        if(increment &lt; 0){</b>
+<b class="fc"><i>105</i>&nbsp;            for(Display display : displays){</b>
+<b class="fc"><i>106</i>&nbsp;                display.addInfo(&quot;Sugar is lowering&quot;);</b>
+<b class="fc"><i>107</i>&nbsp;            }</b>
+<i>108</i>&nbsp;        }
+<b class="fc"><i>109</i>&nbsp;        else if(increment &gt; 0){</b>
+<b class="fc"><i>110</i>&nbsp;            for(Display display : displays){</b>
+<b class="fc"><i>111</i>&nbsp;                display.addInfo(&quot;Sugar is rising&quot;);</b>
+<b class="fc"><i>112</i>&nbsp;            }</b>
+<i>113</i>&nbsp;        }
+<i>114</i>&nbsp;        else{
+<b class="fc"><i>115</i>&nbsp;            for(Display display : displays){</b>
+<b class="fc"><i>116</i>&nbsp;                display.addInfo(&quot;Sugar is stable&quot;);</b>
+<b class="fc"><i>117</i>&nbsp;            }</b>
+<i>118</i>&nbsp;        }
+<b class="fc"><i>119</i>&nbsp;    }</b>
+<i>120</i>&nbsp;
+<i>121</i>&nbsp;    private void regulateSugar(){
+<b class="fc"><i>122</i>&nbsp;        int quantity = max(0, increment);</b>
+<b class="fc"><i>123</i>&nbsp;        if (sugarState == SugarStates.HIGH_SUGAR) {</b>
+<b class="fc"><i>124</i>&nbsp;            quantity += LITTLE_ADDITION;</b>
+<i>125</i>&nbsp;        }
+<b class="fc"><i>126</i>&nbsp;        else if (sugarState == SugarStates.VERY_HIGH_SUGAR &amp;&amp; increment &gt;= 0){</b>
+<b class="fc"><i>127</i>&nbsp;            quantity += HUGE_ADDITION;</b>
+<i>128</i>&nbsp;        }
+<b class="fc"><i>129</i>&nbsp;        insulinInjection(quantity);</b>
+<b class="fc"><i>130</i>&nbsp;    }</b>
+<i>131</i>&nbsp;
+<i>132</i>&nbsp;    private void checkInsulinStatus() {
+<b class="fc"><i>133</i>&nbsp;        remainingInsulin = pump.getAvailableInsulin();</b>
+<b class="fc"><i>134</i>&nbsp;        if(remainingInsulin == 0){</b>
+<b class="fc"><i>135</i>&nbsp;            insulinState = InsulinStates.EMPTY;</b>
+<i>136</i>&nbsp;        }
+<b class="fc"><i>137</i>&nbsp;        else if(remainingInsulin &lt; LOWER_INSULIN_BOUND){</b>
+<b class="fc"><i>138</i>&nbsp;            insulinState = InsulinStates.LOW_RESERVE;</b>
+<i>139</i>&nbsp;        }
+<i>140</i>&nbsp;        else {
+<b class="fc"><i>141</i>&nbsp;            insulinState = InsulinStates.GOOD;</b>
+<i>142</i>&nbsp;        }
+<b class="fc"><i>143</i>&nbsp;    }</b>
+<i>144</i>&nbsp;
+<i>145</i>&nbsp;    private void insulinInjection(int quantity) {
+<i>146</i>&nbsp;        try {
+<b class="fc"><i>147</i>&nbsp;            pump.injectInsulin(quantity);</b>
+<i>148</i>&nbsp;        }
+<b class="fc"><i>149</i>&nbsp;        catch (InsulinAvailabilityException e){</b>
+<b class="fc"><i>150</i>&nbsp;            for (Display display : displays){</b>
+<b class="fc"><i>151</i>&nbsp;                display.addInfo(&quot;You need to fill the reservoir by almost &quot;</b>
+<b class="fc"><i>152</i>&nbsp;                        + e.getRequiredAmount() +</b>
+<i>153</i>&nbsp;                        &quot; units to stop rising sugar level&quot;);
+<b class="fc"><i>154</i>&nbsp;            }</b>
+<b class="fc"><i>155</i>&nbsp;        }</b>
+<b class="fc"><i>156</i>&nbsp;    }</b>
+<i>157</i>&nbsp;
+<i>158</i>&nbsp;    public static int getLowerSugarBound() {
+<b class="fc"><i>159</i>&nbsp;        return LOWER_SUGAR_BOUND;</b>
+<i>160</i>&nbsp;    }
+<i>161</i>&nbsp;
+<i>162</i>&nbsp;    public static int getUpperSugarBound() {
+<b class="fc"><i>163</i>&nbsp;        return UPPER_SUGAR_BOUND;</b>
+<i>164</i>&nbsp;    }
+<i>165</i>&nbsp;
+<b class="fc"><i>166</i>&nbsp;    public static int getLowerInsulinBound(){ return LOWER_INSULIN_BOUND; }</b>
+<i>167</i>&nbsp;
+<i>168</i>&nbsp;    public static int getHyperglycemiaBound() {
+<b class="fc"><i>169</i>&nbsp;        return HYPERGLYCEMIA_BOUND;</b>
+<i>170</i>&nbsp;    }
+<i>171</i>&nbsp;
+<i>172</i>&nbsp;    public static int getHypoglycemiaBound() {
+<b class="fc"><i>173</i>&nbsp;        return HYPOGLYCEMIA_BOUND;</b>
+<i>174</i>&nbsp;    }
+<i>175</i>&nbsp;
+<i>176</i>&nbsp;    public int getIncrement() {
+<b class="fc"><i>177</i>&nbsp;        return increment;</b>
+<i>178</i>&nbsp;    }
+<i>179</i>&nbsp;
+<i>180</i>&nbsp;    public SugarStates getSugarState() {
+<b class="fc"><i>181</i>&nbsp;        return sugarState;</b>
+<i>182</i>&nbsp;    }
+<i>183</i>&nbsp;
+<i>184</i>&nbsp;    public InsulinStates getInsulinState() {
+<b class="fc"><i>185</i>&nbsp;        return insulinState;</b>
+<i>186</i>&nbsp;    }
+<i>187</i>&nbsp;
+<i>188</i>&nbsp;    public int getDisplayNumber(){
+<b class="fc"><i>189</i>&nbsp;        return displays.size();</b>
+<i>190</i>&nbsp;    }
+<i>191</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-01-25 03:42</div>
+</div>
+</body>
+</html>

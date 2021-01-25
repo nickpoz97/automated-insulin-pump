@@ -1,9 +1,8 @@
 package it.univr.unitAndComponentTesting;
-import it.univr.app.AutomatedInsulinPump;
+import it.univr.systemComponents.InputHandler;
+import it.univr.systemWrapper.AutomatedInsulinPump;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Random;
@@ -24,17 +23,12 @@ public class SystemTests {
                 "z\nc\n"; // z should not crash the program
         }
         inputString += "e\n";
-        setStdInput(inputString);
+        InputHandler.updateInputStream(inputString);
 
         // auto std input already set
         AutomatedInsulinPump system = new AutomatedInsulinPump(80, 0, 300, true);
         system.run();
         assertTrue(true);
-    }
-
-    private void setStdInput(String inputString){
-        InputStream in = new ByteArrayInputStream(inputString.getBytes());
-        System.setIn(in);
     }
 
 }

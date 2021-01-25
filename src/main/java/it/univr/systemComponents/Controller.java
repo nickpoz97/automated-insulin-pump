@@ -44,7 +44,6 @@ public class Controller {
         this.checkInsulinStatus();
     }
 
-    // testingmode
     public Controller(Pump pump, Display display, SugarSensor sugarSensor, InputHandler inputHandler){
         this(pump, display, sugarSensor);
         this.inputHandler = inputHandler;
@@ -65,6 +64,7 @@ public class Controller {
             continueLoop = inputHandler.processInput();
         }
         updateSugarMeasurements();
+        sendIncrementInfo();
         checkSugarStatus();
         if(sugarState != SugarStates.LOW_SUGAR && sugarState != SugarStates.VERY_LOW_SUGAR) {
             regulateSugar();
@@ -78,6 +78,8 @@ public class Controller {
         int oldMeasurement = lastMeasurement;
         lastMeasurement = sugarSensor.getSugarInBlood();
         increment = lastMeasurement - oldMeasurement;
+
+        System.out.println("THIS IS THE INCREMENT: " + increment);
     }
 
     private void checkSugarStatus() {
@@ -96,7 +98,6 @@ public class Controller {
         else{
             sugarState = SugarStates.GOOD;
         }
-        this.sendIncrementInfo();
     }
 
     private void sendIncrementInfo() {
@@ -163,6 +164,14 @@ public class Controller {
     }
 
     public static int getLowerInsulinBound(){ return LOWER_INSULIN_BOUND; }
+
+    public static int getHyperglycemiaBound() {
+        return HYPERGLYCEMIA_BOUND;
+    }
+
+    public static int getHypoglycemiaBound() {
+        return HYPOGLYCEMIA_BOUND;
+    }
 
     public int getIncrement() {
         return increment;

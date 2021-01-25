@@ -8,8 +8,6 @@ import it.univr.systemComponents.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
@@ -17,13 +15,12 @@ import static org.junit.Assert.*;
 
 public class ControllerTests {
     private Controller controller;
-    private InputHandler inputHandler;
 
     @Before
     public void initialize(){
         BloodModel bloodModel = new InteractiveBloodModel();
         InsulinReservoir insulinReservoir = new InsulinReservoir();
-        inputHandler = new InputHandler(bloodModel, insulinReservoir);
+        InputHandler inputHandler = new InputHandler(bloodModel, insulinReservoir);
         Pump pump = new Pump(insulinReservoir, bloodModel);
         SugarSensor sugarSensor = new SugarSensor(bloodModel);
         Display display = new Display();
@@ -46,14 +43,14 @@ public class ControllerTests {
         assertEquals(SugarStates.GOOD, controller.getSugarState());
 
         // do nothing
-        setInput("c\n");
+        InputHandler.updateInputStream("c\n");
         controller.play();
 
         assertEquals(InsulinStates.GOOD, controller.getInsulinState());
         assertEquals(SugarStates.GOOD, controller.getSugarState());
 
         // + 40 sugar
-        setInput("s\n40\nc\n");
+        InputHandler.updateInputStream("s\n40\nc\n");
         controller.play();
 
         assertEquals(InsulinStates.GOOD, controller.getInsulinState());
@@ -62,7 +59,7 @@ public class ControllerTests {
 
         for(int i = 0 ; i < 10 ; i++){
             // each iter: +50 sugar
-            setInput("s\n50\nc\n");
+            InputHandler.updateInputStream("s\n50\nc\n");
             controller.play();
         }
 
@@ -70,21 +67,15 @@ public class ControllerTests {
         assertEquals(SugarStates.VERY_HIGH_SUGAR, controller.getSugarState());
 
         // +300 insulin
-        setInput("i\n300\nc\n");
+        InputHandler.updateInputStream("i\n300\nc\n");
         controller.play();
 
         for(int i = 0 ; i < 10 ; i++){
-            setInput("c\n");
+            InputHandler.updateInputStream("c\n");
             controller.play();
         }
 
         assertTrue(controller.getIncrement() < 0);
         assertNotSame(controller.getSugarState(), SugarStates.HIGH_SUGAR);
-    }
-
-    private void setInput(String inputString){
-        InputStream inputStream = new ByteArrayInputStream(inputString.getBytes());
-        System.setIn(inputStream);
-        inputHandler.updateInputStream();
     }
 }
